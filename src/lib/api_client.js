@@ -61,7 +61,7 @@ export class ApiClient {
     this.endpoint = endpoint;
   }
 
-  async execute({ method, params, onSuccess, onFailure, onComplete }) {
+  async execute({ method, params, onSuccess, onError, onComplete }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
     const queryParams = getQueryParams(params);
@@ -78,7 +78,7 @@ export class ApiClient {
 
     // if the status wasn't successful
     if(response.status !== 200) {
-      onFailure && onFailure(json);
+      onError && onError(json);
       onComplete && onComplete();
       return;
     }
@@ -87,7 +87,7 @@ export class ApiClient {
     onComplete && onComplete();
   }
 
-  getBalance({ number, pin, onSuccess, onFailure, onComplete }) {
+  getBalance({ number, pin, onSuccess, onError, onComplete }) {
     return this.execute({
       method: 'get_balance',
       params: {
@@ -95,7 +95,7 @@ export class ApiClient {
         pin
       },
       onSuccess,
-      onFailure,
+      onError,
       onComplete
     });
   }

@@ -9,6 +9,25 @@
     <title>Cardigan.js</title>
   </head>
   <body>
+    <h1>Balance Checker</h1>
+    <form data-cardigan-balance-checker="form">
+      <p data-cardigan-balance-checker="result"></p>
+
+      <label>
+        Number
+        <input data-cardigan-balance-checker="number" type="number" name="number" value="" />
+      </label>
+
+      <label>
+        PIN
+        <input data-cardigan-balance-checker="pin" type="number" name="number" value="" />
+      </label>
+
+      <button data-cardigan-balance-checker="submit" type="submit">
+        Submit
+      </button>
+    </form>
+
     <script id="cardigan-config" type="application/json">
       {
         "endpoint": "https://cardigan-dev.au.ngrok.io/api/v1",
