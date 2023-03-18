@@ -1,11 +1,16 @@
 // Constants for possible HTTP methods.
 const GET = 'get';
+const POST = 'post';
 
 // API methods with their corresponding HTTP method and path.
 const API_METHODS = {
   get_balance: {
     http_method: GET,
     path: 'cards/:number.json'
+  },
+  apply: {
+    http_method: POST,
+    path: 'cards/:number/apply.json'
   }
 }
 
@@ -90,6 +95,19 @@ export class ApiClient {
   getBalance({ number, pin, onSuccess, onError, onComplete }) {
     return this.execute({
       method: 'get_balance',
+      params: {
+        number,
+        pin
+      },
+      onSuccess,
+      onError,
+      onComplete
+    });
+  }
+
+  apply({ number, pin, onSuccess, onError, onComplete }) {
+    return this.execute({
+      method: 'apply',
       params: {
         number,
         pin
