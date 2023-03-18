@@ -112,7 +112,7 @@ export class BalanceCheckerForm {
       return;
     }
 
-    console.log('[Cardigan BalanceCheckerForm]', ...args);
+    console.log('[Cardigan Balance Checker Form]', ...args);
   }
 
 }
