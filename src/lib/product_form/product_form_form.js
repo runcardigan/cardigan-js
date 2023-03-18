@@ -46,13 +46,7 @@ export class ProductFormForm {
       return;
     }
 
-    const sectionIdMatch = parentSectionElement.getAttribute('data-section').match(/\d+/);
-
-    if(!sectionIdMatch) {
-      return;
-    }
-
-    const sectionId = sectionIdMatch[0];
+    const sectionId = parentSectionElement.getAttribute('data-section');
     const productFormId = `product-form-${sectionId}`;
 
     this.recipientNameElement && this.recipientNameElement.setAttribute('form', productFormId);
