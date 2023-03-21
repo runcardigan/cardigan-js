@@ -84,7 +84,11 @@ export class BalanceCheckerForm {
     const { resultElement } = this;
 
     resultElement.classList.add('cardigan-result--success');
-    resultElement.innerText = card.balance;
+    resultElement.innerText = this.formatCard(card);
+  }
+
+  formatCard(card) {
+    return `${card.balance_formatted}${card.expires_at ? ` (exp ${card.expires_at.substring(0, 10)})` : ''}`;
   }
 
   onError(error) {
