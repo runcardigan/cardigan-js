@@ -9,10 +9,11 @@ import { renderHtmlTemplate } from "../helpers";
 
 export class CheckoutForm {
 
-  constructor(formWrapperElement, api, config) {
+  constructor(formWrapperElement, api, config, templates) {
     this.formWrapperElement = formWrapperElement;
     this.api = api;
     this.config = config;
+    this.templates = templates;
     this.potentialCard = false;
 
     this.initialise();
@@ -42,8 +43,8 @@ export class CheckoutForm {
   }
 
   renderPin() {
-    const { config } = this;
-    renderHtmlTemplate(config, this.fieldsetElement, 'pin');
+    const { templates } = this;
+    renderHtmlTemplate(templates, this.fieldsetElement, 'pin');
   }
 
   handleInput(e) {
