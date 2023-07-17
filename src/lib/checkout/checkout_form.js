@@ -128,8 +128,9 @@ export class CheckoutForm {
   isPotentialCard(value) {
     this.debug('isPotentialCard()', value);
 
+    const { config } = this;
     const cleanValue = value.replace(/\D/g, '');
-    return cleanValue.length >= 20;
+    return cleanValue.length >= config.card_length;
   }
 
   debug(...args) {
