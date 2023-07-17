@@ -14,10 +14,11 @@ const SUPPORTED_CHECKOUT_STEPS = [
 
 export class Checkout {
 
-  constructor(document, api, config, Shopify) {
+  constructor(document, api, config, templates, Shopify) {
     this.document = document;
     this.api = api;
     this.config = config;
+    this.templates = templates;
     this.Shopify = Shopify;
 
     this.initialise();
@@ -26,7 +27,7 @@ export class Checkout {
   initialise() {
     this.debug('initialise()');
 
-    const { document, Shopify, api, config } = this;
+    const { document, Shopify, api, config, templates } = this;
 
     // if we're not in the Shopify checkout on a supported step, return
     if(!Shopify || !Shopify.Checkout || !SUPPORTED_CHECKOUT_STEPS.includes(Shopify.Checkout.step)) {
@@ -41,7 +42,7 @@ export class Checkout {
           return;
         }
 
-        new CheckoutForm(formWrapperElement, api, config);
+        new CheckoutForm(formWrapperElement, api, config, templates);
       });
     };
 
@@ -54,7 +55,7 @@ export class Checkout {
   }
 
   debug(...args) {
-    if(!this.config.debug) {
+    if(!this.config.cardigan_js_debug) {
       return;
     }
 
