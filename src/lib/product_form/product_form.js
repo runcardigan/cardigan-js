@@ -30,7 +30,7 @@ export class ProductForm {
   }
 
   debug(...args) {
-    if(!this.config.debug) {
+    if(!this.config.cardigan_js_debug) {
       return;
     }
 

@@ -8,7 +8,7 @@ export const SELECTOR_CHECKOUT_DISCOUNT_INPUT = '[data-discount-field="true"]';
 export const SELECTOR_CHECKOUT_FIELDSET = '.fieldset';
 export const SELECTOR_CHECKOUT_FORM = 'form';
 export const SELECTOR_CHECKOUT_REDUCTION_FORM_WRAPPER = '[data-reduction-form]';
-export const SELECTOR_CHECKOUT_SECURITY_CODE_INPUT = '[name="checkout[security_code]"]';
+export const SELECTOR_CHECKOUT_PIN_INPUT = '[name="checkout[pin]"]';
 export const SELECTOR_CHECKOUT_SUBMIT_BUTTON = '[type="submit"]';
 
 export const CHECKOUT_STEP_CONTACT_INFORMATION = 'contact_information';

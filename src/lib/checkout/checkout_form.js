@@ -2,17 +2,18 @@ import {
   SELECTOR_CHECKOUT_DISCOUNT_INPUT,
   SELECTOR_CHECKOUT_FIELDSET,
   SELECTOR_CHECKOUT_FORM,
-  SELECTOR_CHECKOUT_SECURITY_CODE_INPUT,
+  SELECTOR_CHECKOUT_PIN_INPUT,
   SELECTOR_CHECKOUT_SUBMIT_BUTTON
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
 
 export class CheckoutForm {
 
-  constructor(formWrapperElement, api, config) {
+  constructor(formWrapperElement, api, config, templates) {
     this.formWrapperElement = formWrapperElement;
     this.api = api;
     this.config = config;
+    this.templates = templates;
     this.potentialCard = false;
 
     this.initialise();
@@ -31,7 +32,7 @@ export class CheckoutForm {
 
     // render the pin input
     this.renderPin();
-    this.pinInputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_SECURITY_CODE_INPUT);
+    this.pinInputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_PIN_INPUT);
 
     // register event listeners
     this.inputElement.addEventListener('input', this.handleInput.bind(this));
@@ -42,8 +43,8 @@ export class CheckoutForm {
   }
 
   renderPin() {
-    const { config } = this;
-    renderHtmlTemplate(config, this.fieldsetElement, 'pin');
+    const { templates } = this;
+    renderHtmlTemplate(templates, this.fieldsetElement, 'pin');
   }
 
   handleInput(e) {
@@ -127,12 +128,13 @@ export class CheckoutForm {
   isPotentialCard(value) {
     this.debug('isPotentialCard()', value);
 
+    const { config } = this;
     const cleanValue = value.replace(/\D/g, '');
-    return cleanValue.length >= 20;
+    return cleanValue.length >= config.card_length;
   }
 
   debug(...args) {
-    if(!this.config.debug) {
+    if(!this.config.cardigan_js_debug) {
       return;
     }
 

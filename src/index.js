@@ -9,8 +9,11 @@ const initialise = () => {
   // parse Cardigan configuration
   const config = parseJSONScript(document, 'cardigan-config');
 
+  // parse Cardigan templates, if present
+  const templates = parseJSONScript(document, 'cardigan-templates');
+
   // initialise a Cardigan object and make it accessible to the window
-  window.cardigan = new Cardigan(document, window.Shopify, config);
+  window.cardigan = new Cardigan(document, window.Shopify, config, templates);
 }
 
 initialise();
