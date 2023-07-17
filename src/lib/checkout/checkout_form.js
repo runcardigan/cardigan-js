@@ -2,7 +2,7 @@ import {
   SELECTOR_CHECKOUT_DISCOUNT_INPUT,
   SELECTOR_CHECKOUT_FIELDSET,
   SELECTOR_CHECKOUT_FORM,
-  SELECTOR_CHECKOUT_SECURITY_CODE_INPUT,
+  SELECTOR_CHECKOUT_PIN_INPUT,
   SELECTOR_CHECKOUT_SUBMIT_BUTTON
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
@@ -32,7 +32,7 @@ export class CheckoutForm {
 
     // render the pin input
     this.renderPin();
-    this.pinInputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_SECURITY_CODE_INPUT);
+    this.pinInputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_PIN_INPUT);
 
     // register event listeners
     this.inputElement.addEventListener('input', this.handleInput.bind(this));
