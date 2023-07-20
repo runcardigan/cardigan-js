@@ -6,7 +6,7 @@ export const parseJSONScript = (document, id) => {
   } catch { return null; }
 };
 
-// render a HTML template after the given target element, with optional context interpolation
+// render a HTML template from the give target element, with optional context interpolation
 export const renderHtmlTemplate = (templates, targetElement, templateName, context = {}, renderMethod = 'after') => {
   const interpolatedTemplate = Object.entries(context).reduce((output, value) => {
     const [k, v] = value;

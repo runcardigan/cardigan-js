@@ -11,7 +11,7 @@
   <body>
     <h1>Balance Checker</h1>
     <form data-cardigan-balance-checker="form">
-      <p data-cardigan-balance-checker="result"></p>
+      <div data-cardigan-balance-checker="result"></div>
 
       <label>
         Number
@@ -64,6 +64,16 @@
         "subdomain": "disco-sandbox"
       }
     </script>
+
+    <script id="cardigan-templates" type="application/json">
+      {
+        "balance_checker_result_default": "<span>Enter a number and PIN.</span>",
+        "balance_checker_result_loading": "<span>Loading...</span>",
+        "balance_checker_result_success": "<span>{{ balance_formatted }}</span>",
+        "balance_checker_result_error": "<span>{{ errors }}</span>"
+      }
+    </script>
+
     <script data-cardigan-script type="module" src="/src/index.js"></script>
   </body>
 </html>
