@@ -1,16 +1,29 @@
 import {
+  DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_DEFAULT,
+  DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_LOADING,
+  DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_SUCCESS,
+  DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_ERROR,
   SELECTOR_BALANCE_CHECKER_NUMBER,
   SELECTOR_BALANCE_CHECKER_PIN,
   SELECTOR_BALANCE_CHECKER_RESULT,
   SELECTOR_BALANCE_CHECKER_SUBMIT
 } from "../constants";
+import { renderHtmlTemplate } from "../helpers";
+
+const DEFAULT_TEMPLATES = {
+  balance_checker_result_default: DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_DEFAULT,
+  balance_checker_result_loading: DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_LOADING,
+  balance_checker_result_success: DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_SUCCESS,
+  balance_checker_result_error: DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_ERROR
+};
 
 export class BalanceCheckerForm {
 
-  constructor(formElement, api, config) {
+  constructor(formElement, api, config, templates) {
     this.formElement = formElement;
     this.api = api;
     this.config = config;
+    this.templates = Object.assign({}, DEFAULT_TEMPLATES, templates);
 
     this.initialise();
   }
@@ -29,6 +42,9 @@ export class BalanceCheckerForm {
     // register event listeners
     this.formElement.addEventListener('submit', this.handleSubmit.bind(this));
 
+    // render the default result state
+    this.renderResult('default');
+
     // mark this form element as initialised
     formElement.dataset.cardigan = 'true';
   }
@@ -36,7 +52,7 @@ export class BalanceCheckerForm {
   handleSubmit(e) {
     this.debug('handleSubmit()', e);
 
-    const { numberElement, pinElement, submitElement, resultElement, api } = this;
+    const { numberElement, pinElement, submitElement, api } = this;
 
     // prevent form submission
     e.preventDefault();
@@ -60,9 +76,8 @@ export class BalanceCheckerForm {
     numberElement.disabled = true;
     pinElement.disabled = true;
 
-    // render the blank result state
-    resultElement.classList.remove('cardigan-result--success', 'cardigan-result--error');
-    resultElement.innerText = '';
+    // render the loading result state
+    this.renderResult('loading');
 
     // build values for balance request
     const number = numberElement.value;
@@ -81,23 +96,13 @@ export class BalanceCheckerForm {
   onSuccess(card) {
     this.debug('onSuccess', card);
 
-    const { resultElement } = this;
-
-    resultElement.classList.add('cardigan-result--success');
-    resultElement.innerText = this.formatCard(card);
-  }
-
-  formatCard(card) {
-    return `${card.balance_formatted}${card.expires_at ? ` (exp ${card.expires_at.substring(0, 10)})` : ''}`;
+    this.renderResult('success', card);
   }
 
   onError(error) {
     this.debug('onError', error);
 
-    const { resultElement } = this;
-
-    resultElement.classList.add('cardigan-result--success');
-    resultElement.innerText = error.errors.join(', ');
+    this.renderResult('error', error);
   }
 
   onComplete() {
@@ -109,6 +114,17 @@ export class BalanceCheckerForm {
     numberElement.disabled = false;
     pinElement.disabled = false;
     submitElement.disabled = false;
+  }
+
+  renderResult(templateNameSuffix, context = {}) {
+    const { resultElement, templates } = this;
+    renderHtmlTemplate(
+      templates,
+      resultElement,
+      `balance_checker_result_${templateNameSuffix}`,
+      context,
+      'replaceChildren'
+    );
   }
 
   debug(...args) {

@@ -5,10 +5,11 @@ import { BalanceCheckerForm } from "./balance_checker_form";
 
 export class BalanceChecker {
 
-  constructor(document, api, config) {
+  constructor(document, api, config, templates) {
     this.document = document;
     this.api = api;
     this.config = config;
+    this.templates = templates;
 
     this.initialise();
   }
@@ -16,7 +17,7 @@ export class BalanceChecker {
   initialise() {
     this.debug('initialise()');
 
-    const { document, api, config } = this;
+    const { document, api, config, templates } = this;
 
     // initialise all balance checkers on the page
     document.querySelectorAll(SELECTOR_BALANCE_CHECKER_FORM).forEach(formElement => {
@@ -25,7 +26,7 @@ export class BalanceChecker {
         return;
       }
 
-      new BalanceCheckerForm(formElement, api, config);
+      new BalanceCheckerForm(formElement, api, config, templates);
     });
   }
 
