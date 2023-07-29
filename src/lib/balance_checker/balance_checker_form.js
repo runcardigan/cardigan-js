@@ -83,8 +83,8 @@ export class BalanceCheckerForm {
     const number = numberElement.value;
     const pin = pinElement.value;
 
-    // make balance check request
-    api.getBalance({
+    // make card balance check request
+    api.getCardBalance({
       number,
       pin,
       onSuccess: this.onSuccess.bind(this),
@@ -93,16 +93,18 @@ export class BalanceCheckerForm {
     });
   }
 
-  onSuccess(card) {
-    this.debug('onSuccess', card);
+  onSuccess(result) {
+    this.debug('onSuccess', result);
 
-    this.renderResult('success', card);
+    this.renderResult('success', result.card);
   }
 
-  onError(error) {
-    this.debug('onError', error);
+  onError(result) {
+    this.debug('onError', result);
 
-    this.renderResult('error', error);
+    this.renderResult('error', {
+      errors: result.errors.map(e => e.description)
+    });
   }
 
   onComplete() {
