@@ -4,13 +4,23 @@ const POST = 'post';
 
 // API methods with their corresponding HTTP method and path.
 const API_METHODS = {
-  get_balance: {
+  get_card_balance: {
     http_method: GET,
     path: 'cards/:number.json'
   },
-  apply: {
+  get_rewards_balance: {
+    http_method: GET,
+    path: 'rewards/:id.json',
+    authenticated: true
+  },
+  apply_card: {
     http_method: POST,
     path: 'cards/:number/apply.json'
+  },
+  apply_rewards: {
+    http_method: POST,
+    path: 'rewards/:id/apply.json',
+    authenticated: true
   }
 }
 
@@ -34,6 +44,9 @@ const getUrl = (endpoint, subdomain, method, params) => {
 const getHttpMethod = (method) => {
   return API_METHODS[method].http_method;
 };
+
+// Return whether the given method requires authentication.
+const getAuthenticated = method => (API_METHODS[method].authenticated === true);
 
 // Return a combined set of query parameters for a request
 const getQueryParams = (authentication, params) => {
@@ -69,14 +82,28 @@ export class ApiClient {
   async execute({ method, params, onSuccess, onError, onComplete }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
+    const authenticated = getAuthenticated(method);
     const queryParams = getQueryParams(params);
+
+    const headers = {
+      'Content-Type': 'application/json; charset=utf-8'
+    }
+
+    if(authenticated) {
+      let [data, errors] = await this.getToken();
+
+      if (errors) {
+        onError && onError(errors);
+        return;
+      }
+
+      headers['Authorization'] = `Bearer ${data.token}`;
+    }
 
     const response = await fetch(url + buildQueryString(queryParams), {
       method: httpMethod,
       mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      }
+      headers: headers
     });
 
     const json = await response.json();
@@ -92,9 +119,37 @@ export class ApiClient {
     onComplete && onComplete();
   }
 
-  getBalance({ number, pin, onSuccess, onError, onComplete }) {
+  async getToken() {
+    const { subdomain } = this;
+
+    try {
+      const response = await fetch(`/apps/cardigan/api/v1/${subdomain}/token`);
+
+      const json = await response.json();
+
+      if (response.status !== 200) {
+        return [null, json];
+      }
+
+      return [json, null];
+    } catch (error) {
+      return [
+        null,
+        {
+          errors: [
+            {
+              code: 'could_not_fetch_token',
+              description: 'Could not fetch customer token.'
+            }
+          ]
+        }
+      ];
+    }
+  };
+
+  getCardBalance({ number, pin, onSuccess, onError, onComplete }) {
     return this.execute({
-      method: 'get_balance',
+      method: 'get_card_balance',
       params: {
         number,
         pin
@@ -105,12 +160,37 @@ export class ApiClient {
     });
   }
 
-  apply({ number, pin, onSuccess, onError, onComplete }) {
+  getRewardsBalance({ id, onSuccess, onError, onComplete }) {
     return this.execute({
-      method: 'apply',
+      method: 'get_rewards_balance',
+      params: {
+        id
+      },
+      onSuccess,
+      onError,
+      onComplete
+    });
+  }
+
+  applyCard({ number, pin, onSuccess, onError, onComplete }) {
+    return this.execute({
+      method: 'apply_card',
       params: {
         number,
         pin
+      },
+      onSuccess,
+      onError,
+      onComplete
+    });
+  }
+
+  applyRewards({ id, amount, onSuccess, onError, onComplete }) {
+    return this.execute({
+      method: 'apply_rewards',
+      params: {
+        id,
+        amount
       },
       onSuccess,
       onError,
