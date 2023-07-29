@@ -29,6 +29,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "vite": "^2.9.9"
+    "express": "^4.18.2",
+    "njwt": "^2.0.0",
+    "vite": "^2.9.9",
+    "vite-plugin-mix": "^0.4.0"
   }
 }
