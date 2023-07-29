@@ -91,7 +91,7 @@ export class CheckoutForm {
     const pin = pinInputElement ? pinInputElement.value : null;
 
     // make application request
-    api.apply({
+    api.applyCard({
       number,
       pin,
       onSuccess: this.handleApplySuccess.bind(this),
@@ -108,13 +108,13 @@ export class CheckoutForm {
     const hiddenInput = document.createElement('input');
     hiddenInput.type = 'hidden';
     hiddenInput.name = 'checkout[reduction_code]';
-    hiddenInput.value = result.code;
+    hiddenInput.value = result.card.code;
 
     inputElement.after(hiddenInput);
   }
 
-  handleApplyFailure(error) {
-    this.debug('handleApplyFailure()', error);
+  handleApplyFailure(result) {
+    this.debug('handleApplyFailure()', result);
   }
 
   handleApplyComplete() {

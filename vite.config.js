@@ -1,5 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite'
+import mix from 'vite-plugin-mix'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,7 +12,11 @@ export default defineConfig({
       fileName: (format) => format === 'iife' ? 'cardigan.js' : `cardigan.${format}.js`
     }
   },
-  plugins: [],
+  plugins: [
+    mix({
+      handler: './token.js',
+    })
+  ],
   server: {
     port: 5173
   }
