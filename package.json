@@ -17,13 +17,14 @@
     "serve": "vite preview"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "main": "./dist/cardigan.umd.js",
   "module": "./dist/cardigan.es.js",
   "exports": {
     ".": {
-      "import": "./dist/cardigan.es.js",
+      "import": "./src/index.js",
       "require": "./dist/cardigan.umd.js"
     }
   },
