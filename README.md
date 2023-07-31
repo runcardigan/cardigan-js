@@ -16,6 +16,7 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
     - [Get rewards balance](#get-rewards-balance)
     - [Apply gift card](#apply-gift-card)
     - [Apply rewards balance](#apply-rewards-balance)
+  - [Development](#development)
   - [Licence](#licence)
 
 ## Theme integration
@@ -237,6 +238,44 @@ cardigan.api.applyRewards({
   }
 });
 ```
+
+## Development
+If you're a developer working on the Cardigan.js library, or you'd like an easy way to spin up a browser window with an instantiated Cardigan instance to make API calls with, this repository provides a simple local development environment, provided by [Vite](https://vitejs.dev).
+
+### Setup
+We recommend using [asdf](https://github.com/asdf-vm/asdf) for the management of tooling versions. For developing with this repository, we recommend Node.js 16.13.
+
+Once you have `asdf` configured and ready to go, you should:
+
+```bash
+# install the version of Node.js in use by this repository
+asdf install nodejs 16.13.0
+
+# install the dependencies - run this from the project root directory
+yarn install
+```
+
+### Environment variables
+In a deployed Shopify theme, environment variables like the Cardigan environment, current Shopify subdomain, and logged in customer ID will be retrieved from shop metafields or the Shopify request context via Liquid templates.
+
+For the purposes of development and testing with this example repository, we need to define these values in a local environment file.
+
+The `.env` file lists the variables required to be set -- when starting development, you should copy this file to a new
+`.env.local` file in the root directory and fill it our with values specific to your environment.
+
+* `VITE_CARDIGAN_ENDPOINT`: The Cardigan API endpoint to make requests to; this will almost always be `https://app.runcardigan.com/api/v1` unless you've been provided a specific staging environment URL by the Cardigan support team.
+* `VITE_CUSTOMER_API_SECRET`: The Cardigan Storefront API secret defined for your Shopify store. This should be provided to you by the Cardigan support team, and is used to generate valid JWT tokens in your local development environment for use against the live Cardigan API. For example, `Qqs99Rc29K23fe7kQvfR1LRG`.
+* `VITE_CUSTOMER_ID`: The numerical ID for the Shopify customer you would like to use for development purposes. For example, `7225251091539`.
+* `VITE_SHOPIFY_SUBDOMAIN`: The domain prefix  for the Shopify store you would like to use for development purposes. For example, this value would be `store` for a Shopify store with the domain `store.myshopify.com`.
+
+### Starting the development server
+With the above configured, starting the development server and being able to hot reload code should be as simple as:
+
+```
+yarn dev
+```
+
+The default `index.html` template includes a balance checker widget and a product form; you can also open the development console and make Cardigan API calls directly with commands like `cardigan.api.getCardBalance(...)`.
 
 ## Licence
 The Cardigan Javascript library is an open-sourced software licensed under the [MIT license](LICENSE.md).
