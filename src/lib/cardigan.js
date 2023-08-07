@@ -3,7 +3,7 @@ import { BalanceChecker } from "./balance_checker/balance_checker";
 import { Checkout } from "./checkout/checkout";
 import { ProductForm } from "./product_form/product_form";
 
-export class Cardigan {
+class Cardigan {
 
   constructor(document, Shopify, config = {}, templates = {}) {
     const api = new ApiClient(config);
@@ -13,4 +13,12 @@ export class Cardigan {
     this.productForm = new ProductForm(document, api, config);
   }
 
+}
+
+export {
+  ApiClient,
+  BalanceChecker,
+  Checkout,
+  Cardigan,
+  ProductForm
 }

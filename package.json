@@ -24,7 +24,7 @@
   "module": "./dist/cardigan.es.js",
   "exports": {
     ".": {
-      "import": "./src/index.js",
+      "import": "./src/lib/cardigan.js",
       "require": "./dist/cardigan.umd.js"
     }
   },
