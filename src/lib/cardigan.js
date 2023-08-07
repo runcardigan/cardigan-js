@@ -16,9 +16,6 @@ class Cardigan {
 }
 
 export {
-  ApiClient,
-  BalanceChecker,
-  Checkout,
-  Cardigan,
-  ProductForm
+  ApiClient as CardiganApi,
+  Cardigan
 }

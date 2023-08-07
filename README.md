@@ -89,6 +89,23 @@ const cardigan = new Cardigan(
 cardigan.api.getCardBalance({ number: '84142498040559305028', pin: '8521 '});
 ```
 
+The above approach (initialising your own `Cardigan` instance) makes the most sense if you're still looking to utilise Cardigan's built-in balance checker or product form widgets.
+If you're looking purely to interact with the Cardigan API, you can initialise only an API client instance:
+
+```js
+// import Cardigan API library only
+import { CardiganApi } from "cardigan-js";
+
+// initialise a Cardigan API instance with configuration options
+const cardiganApi = new CardiganApi({
+  "endpoint": "https://app.runcardigan.com/api/v1",
+  "subdomain": "example"
+});
+
+// use the client
+cardiganApi.getCardBalance({ number: '84142498040559305028', pin: '8521 '});
+```
+
 ## Reference
 This section describes each of the API methods available via the client, their method signature, and an example usage.
 
