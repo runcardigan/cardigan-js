@@ -39,7 +39,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.2.1`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.2.2`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -48,7 +48,7 @@ The latest version of the library is `1.2.1`, which can be loaded and initialise
     "subdomain": "example"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.2.1/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.2.2/cardigan.js"></script>
 ```
 
 The required configuration options to be provided in the `cardigan-config` element are:
@@ -60,13 +60,13 @@ The required configuration options to be provided in the `cardigan-config` eleme
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.2.1
+npm install runcardigan/cardigan-js#1.2.2
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.2.1
+yarn add runcardigan/cardigan-js#1.2.2
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -87,6 +87,23 @@ const cardigan = new Cardigan(
 
 // use the Cardigan API object directly
 cardigan.api.getCardBalance({ number: '84142498040559305028', pin: '8521 '});
+```
+
+The above approach (initialising your own `Cardigan` instance) makes the most sense if you're still looking to utilise Cardigan's built-in balance checker or product form widgets.
+If you're looking purely to interact with the Cardigan API, you can initialise only an API client instance:
+
+```js
+// import Cardigan API library only
+import { CardiganApi } from "cardigan-js";
+
+// initialise a Cardigan API instance with configuration options
+const cardiganApi = new CardiganApi({
+  "endpoint": "https://app.runcardigan.com/api/v1",
+  "subdomain": "example"
+});
+
+// use the client
+cardiganApi.getCardBalance({ number: '84142498040559305028', pin: '8521 '});
 ```
 
 ## Reference

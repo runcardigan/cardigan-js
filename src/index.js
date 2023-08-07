@@ -1,5 +1,5 @@
 // index.js
-import { Cardigan } from "./lib/cardigan";
+import { Cardigan, CardiganApi } from "./lib/cardigan";
 import { parseJSONScript } from "./lib/helpers";
 
 const initialise = () => {
