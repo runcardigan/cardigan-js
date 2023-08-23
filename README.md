@@ -148,6 +148,7 @@ cardigan.api.getCardBalance({
 Get the rewards balance for the given customer.
 
 This is an authenticated endpoint; when calling it, the Cardigan.js library will automatically request a customer session token for the logged in customer.
+Optionally, a token can be provided explicitly as a `token` argument.
 
 ```js
 cardigan.api.getRewardsBalance({
@@ -222,6 +223,7 @@ Validate the balance of a customer’s reward account and ensure a corresponding
 It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
 
 This is an authenticated endpoint; when calling it, the Cardigan.js library will automatically request a customer session token for the logged in customer.
+Optionally, a token can be provided explicitly as a `token` argument.
 
 ```js
 cardigan.api.applyRewards({

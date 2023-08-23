@@ -79,7 +79,7 @@ export class ApiClient {
     this.endpoint = endpoint;
   }
 
-  async execute({ method, params, onSuccess, onError, onComplete }) {
+  async execute({ method, params, onSuccess, onError, onComplete, token }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
     const authenticated = getAuthenticated(method);
@@ -89,15 +89,21 @@ export class ApiClient {
       'Content-Type': 'application/json; charset=utf-8'
     }
 
+    // if the endpoint is authenticated, we require a token
+    // this may be passed by the caller or, if not provided, one will be retrieved
     if(authenticated) {
-      let [data, errors] = await this.getToken();
+      if(!token) {
+        let [data, errors] = await this.getToken();
 
-      if (errors) {
-        onError && onError(errors);
-        return;
+        if (errors) {
+          onError && onError(errors);
+          return;
+        }
+
+        token = data.token;
       }
 
-      headers['Authorization'] = `Bearer ${data.token}`;
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const response = await fetch(url + buildQueryString(queryParams), {
@@ -160,7 +166,7 @@ export class ApiClient {
     });
   }
 
-  getRewardsBalance({ id, onSuccess, onError, onComplete }) {
+  getRewardsBalance({ id, onSuccess, onError, onComplete, token }) {
     return this.execute({
       method: 'get_rewards_balance',
       params: {
@@ -168,7 +174,8 @@ export class ApiClient {
       },
       onSuccess,
       onError,
-      onComplete
+      onComplete,
+      token
     });
   }
 
@@ -185,7 +192,7 @@ export class ApiClient {
     });
   }
 
-  applyRewards({ id, amount, onSuccess, onError, onComplete }) {
+  applyRewards({ id, amount, onSuccess, onError, onComplete, token }) {
     return this.execute({
       method: 'apply_rewards',
       params: {
@@ -194,7 +201,8 @@ export class ApiClient {
       },
       onSuccess,
       onError,
-      onComplete
+      onComplete,
+      token
     });
   }
 
