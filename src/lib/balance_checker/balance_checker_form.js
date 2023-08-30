@@ -112,7 +112,7 @@ export class BalanceCheckerForm {
 
     const { numberElement, pinElement, submitElement } = this;
 
-    submitElement.classList.remove('btn--loading');
+    submitElement.classList.remove('cardigan-button--loading');
     numberElement.disabled = false;
     pinElement.disabled = false;
     submitElement.disabled = false;
