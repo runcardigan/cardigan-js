@@ -1,6 +1,6 @@
 {
   "name": "cardigan-js",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Javascript library for Cardigan, an omnichannel external gift card integration for Shopify and Shopify Plus.",
   "repository": {
     "type": "git",
