@@ -9,6 +9,9 @@ const initialise = () => {
   // parse Cardigan configuration
   const config = parseJSONScript(document, 'cardigan-config');
 
+  // augment the config object with any custom hooks that have been defined
+  config.hooks = (window.cardigan ? window.cardigan.hooks : null) || {};
+
   // parse Cardigan templates, if present
   const templates = parseJSONScript(document, 'cardigan-templates');
 
