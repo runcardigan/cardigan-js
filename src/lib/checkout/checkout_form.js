@@ -129,6 +129,11 @@ export class CheckoutForm {
     this.debug('isPotentialCard()', value);
 
     const { config } = this;
+
+    if(config.hooks.isPotentialCard) {
+      return config.hooks.isPotentialCard(value);
+    }
+
     const cleanValue = value.replace(/\D/g, '');
     return cleanValue.length >= config.card_length;
   }
