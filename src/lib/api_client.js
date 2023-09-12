@@ -49,8 +49,12 @@ const getHttpMethod = (method) => {
 const getAuthenticated = method => (API_METHODS[method].authenticated === true);
 
 // Return a combined set of query parameters for a request
-const getQueryParams = (authentication, params) => {
-  return Object.assign({}, authentication, params);
+const getQueryParams = (params, locale) => {
+  const defaultParams = {
+    locale
+  };
+
+  return Object.assign({}, defaultParams, params);
 };
 
 // Return a querystring that can be appended to an API URL
@@ -74,16 +78,17 @@ const buildQueryString = (params) => {
 
 export class ApiClient {
 
-  constructor({ subdomain, endpoint }) {
+  constructor({ subdomain, endpoint, locale }) {
     this.subdomain = subdomain;
     this.endpoint = endpoint;
+    this.locale = locale;
   }
 
   async execute({ method, params, onSuccess, onError, onComplete, token }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
     const authenticated = getAuthenticated(method);
-    const queryParams = getQueryParams(params);
+    const queryParams = getQueryParams(params, this.locale);
 
     const headers = {
       'Content-Type': 'application/json; charset=utf-8'
