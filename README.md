@@ -39,7 +39,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.2.7`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.2.8`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -48,7 +48,7 @@ The latest version of the library is `1.2.7`, which can be loaded and initialise
     "subdomain": "example"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.2.7/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.2.8/cardigan.js"></script>
 ```
 
 The required configuration options to be provided in the `cardigan-config` element are:
@@ -60,13 +60,13 @@ The required configuration options to be provided in the `cardigan-config` eleme
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.2.7
+npm install runcardigan/cardigan-js#1.2.8
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.2.7
+yarn add runcardigan/cardigan-js#1.2.8
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -248,6 +248,42 @@ cardigan.api.applyRewards({
     //     {
     //       "code": "unauthorized",
     //       "description": "Unauthorized."
+    //     }
+    //   ]
+    // }
+  },
+  onComplete: () => {
+    // this method will always run regardless of the result
+  }
+});
+```
+
+### Remove gift card
+Mark a gift card as removed from a checkout, which will release any held funds (if the external card provider supports it).
+
+It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
+
+```js
+cardigan.api.removeCard({
+  id: '8c4b0002-a48c-42d1-a352-d19f2fe0e657',
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "card": {
+    //     "id": "018607f9-ce90-420f-cd2e-365a14515365",
+    //     "code": "2402476c03f20e567890",
+    //     "currency": "CAD",
+    //     "balance": "100.00"
+    //   }
+    // }
+  },
+  onError: (result) => {
+    // this method will run if the API call fails, with `result` populated as:
+    // {
+    //   "errors": [
+    //     {
+    //       "code": "card_not_found",
+    //       "description": "Could not find a card with the provided details."
     //     }
     //   ]
     // }
