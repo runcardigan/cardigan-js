@@ -258,6 +258,42 @@ cardigan.api.applyRewards({
 });
 ```
 
+### Remove gift card
+Mark a gift card as removed from a checkout, which will release any held funds (if the external card provider supports it).
+
+It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
+
+```js
+cardigan.api.removeCard({
+  id: '8c4b0002-a48c-42d1-a352-d19f2fe0e657',
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "card": {
+    //     "id": "018607f9-ce90-420f-cd2e-365a14515365",
+    //     "code": "2402476c03f20e567890",
+    //     "currency": "CAD",
+    //     "balance": "100.00"
+    //   }
+    // }
+  },
+  onError: (result) => {
+    // this method will run if the API call fails, with `result` populated as:
+    // {
+    //   "errors": [
+    //     {
+    //       "code": "card_not_found",
+    //       "description": "Could not find a card with the provided details."
+    //     }
+    //   ]
+    // }
+  },
+  onComplete: () => {
+    // this method will always run regardless of the result
+  }
+});
+```
+
 ## Development
 If you're a developer working on the Cardigan.js library, or you'd like an easy way to spin up a browser window with an instantiated Cardigan instance to make API calls with, this repository provides a simple local development environment, provided by [Vite](https://vitejs.dev).
 
