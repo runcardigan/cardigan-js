@@ -21,6 +21,10 @@ const API_METHODS = {
     http_method: POST,
     path: 'rewards/:id/apply.json',
     authenticated: true
+  },
+  remove_card: {
+    http_method: POST,
+    path: 'cards/:id/remove.json'
   }
 }
 
@@ -211,4 +215,15 @@ export class ApiClient {
     });
   }
 
+  removeCard({ id, onSuccess, onError, onComplete }) {
+    return this.execute({
+      method: 'remove_card',
+      params: {
+        id
+      },
+      onSuccess,
+      onError,
+      onComplete
+    });
+  }
 }
