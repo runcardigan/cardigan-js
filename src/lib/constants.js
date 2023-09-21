@@ -7,7 +7,8 @@ export const SELECTOR_BALANCE_CHECKER_SUBMIT = '[data-cardigan-balance-checker="
 export const SELECTOR_CHECKOUT_DISCOUNT_INPUT = '[data-discount-field="true"]';
 export const SELECTOR_CHECKOUT_FIELDSET = '.fieldset';
 export const SELECTOR_CHECKOUT_FORM = 'form';
-export const SELECTOR_CHECKOUT_REDUCTION_FORM_WRAPPER = '[data-reduction-form]';
+export const SELECTOR_CHECKOUT_REDUCTION_FORM_WRAPPER = '[data-reduction-form]:not(.edit_checkout)';
+export const SELECTOR_CHECKOUT_REDUCTION_CODE = '.reduction-code';
 export const SELECTOR_CHECKOUT_PIN_INPUT = '[name="checkout[pin]"]';
 export const SELECTOR_CHECKOUT_SUBMIT_BUTTON = '[type="submit"]';
 
