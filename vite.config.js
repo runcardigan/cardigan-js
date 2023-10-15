@@ -13,9 +13,12 @@ export default defineConfig({
     }
   },
   plugins: [
-    mix({
-      handler: './token.js',
-    })
+    {
+      ...mix({
+        handler: './token.js',
+      }),
+      apply: 'serve'
+    }
   ],
   server: {
     port: 5173

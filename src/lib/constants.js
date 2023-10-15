@@ -15,6 +15,7 @@ export const SELECTOR_CHECKOUT_SUBMIT_BUTTON = '[type="submit"]';
 export const CHECKOUT_STEP_CONTACT_INFORMATION = 'contact_information';
 export const CHECKOUT_STEP_PAYMENT_METHOD = 'shipping_method';
 export const CHECKOUT_STEP_SHIPPING_METHOD = 'payment_method';
+export const CHECKOUT_APPLIED_CARDS_CACHE_KEY = 'cardigan:applied_cards';
 
 export const SELECTOR_PRODUCT_FORM_FORM = '[data-cardigan-product-form="form"]';
 export const SELECTOR_PRODUCT_FORM_RECIPIENT_NAME = '[data-cardigan-product-form="recipient-name"]';
