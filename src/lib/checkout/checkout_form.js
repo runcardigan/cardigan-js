@@ -1,9 +1,9 @@
 import {
+  CHECKOUT_APPLIED_CARDS_CACHE_KEY,
   SELECTOR_CHECKOUT_DISCOUNT_INPUT,
   SELECTOR_CHECKOUT_FIELDSET,
   SELECTOR_CHECKOUT_FORM,
   SELECTOR_CHECKOUT_PIN_INPUT,
-  SELECTOR_CHECKOUT_REDUCTION_CODE,
   SELECTOR_CHECKOUT_SUBMIT_BUTTON
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
@@ -38,10 +38,6 @@ export class CheckoutForm {
     // register event listeners
     this.inputElement.addEventListener('input', this.handleInput.bind(this));
     this.formElement.addEventListener('submit', this.handleSubmit.bind(this));
-    document.addEventListener('page:change', this.handlePageChange.bind(this));
-
-    // perform an initial check to remove applied cards if it's required
-    this.removeAppliedCardsIfRequired();
 
     // mark this form element as initialised
     formWrapperElement.dataset.cardigan = 'true';
@@ -133,12 +129,6 @@ export class CheckoutForm {
     formElement.submit();
   }
 
-  handlePageChange() {
-    this.debug('handlePageChange()');
-
-    this.removeAppliedCardsIfRequired();
-  }
-
   isPotentialCard(value) {
     this.debug('isPotentialCard()', value);
 
@@ -152,61 +142,11 @@ export class CheckoutForm {
     return cleanValue.length >= config.card_length;
   }
 
-  removeAppliedCardsIfRequired() {
-    this.debug('removeAppliedCardsIfRequired()');
-
-    const { api } = this;
-
-    const cachedAppliedCards = this.readAppliedCardCache();
-    const appliedCardTags = this.parseAppliedCardTags();
-
-    Object.keys(cachedAppliedCards).forEach(id => {
-      const cachedAppliedCard = cachedAppliedCards[id];
-
-      const isStillApplied = appliedCardTags.some(appliedCardTag => {
-        return appliedCardTag.lastCharacters === cachedAppliedCard.lastCharacters;
-      });
-
-      // if the card is still applied, nothing to do
-      if(isStillApplied) {
-        return;
-      }
-
-      api.removeCard({
-        id,
-        onSuccess: this.handleRemoveSuccess.bind(this)
-      });
-    });
-  }
-
-  handleRemoveSuccess(result) {
-    this.debug('handleRemoveSuccess()', result);
-
-    this.clearAppliedCard(result.card.id);
-  }
-
-  parseAppliedCardTags() {
-    this.debug('parseAppliedCardTags()');
-
-    const { formWrapperElement } = this;
-    const giftCardRegex = new RegExp('•••• ([0-9]+)');
-
-    return Array.from(formWrapperElement.querySelectorAll(SELECTOR_CHECKOUT_REDUCTION_CODE)).map(reductionCodeElement => {
-      const matches = reductionCodeElement.innerText.match(giftCardRegex);
-
-      return {
-        lastCharacters: matches ? matches[1] : null
-      }
-    }).filter(appliedCardTag => {
-      return !!appliedCardTag.lastCharacters;
-    });
-  }
-
   readAppliedCardCache() {
     this.debug('readAppliedCardCache()');
 
     try {
-      return JSON.parse(localStorage.getItem('cardigan:applied_cards')) || {};
+      return JSON.parse(localStorage.getItem(CHECKOUT_APPLIED_CARDS_CACHE_KEY)) || {};
     } catch {
       return {};
     }
@@ -216,7 +156,7 @@ export class CheckoutForm {
     this.debug('writeAppliedCardCache()', appliedCards);
 
     try {
-      localStorage.setItem('cardigan:applied_cards', JSON.stringify(appliedCards));
+      localStorage.setItem(CHECKOUT_APPLIED_CARDS_CACHE_KEY, JSON.stringify(appliedCards));
     } catch {
       return null;
     }
@@ -230,14 +170,6 @@ export class CheckoutForm {
       lastCharacters: card.code.slice(-4),
       balance: card.balance
     }
-    this.writeAppliedCardCache(appliedCards);
-  }
-
-  clearAppliedCard(id) {
-    this.debug('clearAppliedCard()', id);
-
-    const appliedCards = this.readAppliedCardCache();
-    delete appliedCards[id];
     this.writeAppliedCardCache(appliedCards);
   }
 
