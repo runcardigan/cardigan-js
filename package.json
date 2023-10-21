@@ -7,8 +7,10 @@
     "url": "https://github.com/discolabs/cardigan-js.git"
   },
   "keywords": [
+    "gift card",
     "givex",
-    "shopify"
+    "shopify",
+    "vii"
   ],
   "scripts": {
     "build": "vite build",
