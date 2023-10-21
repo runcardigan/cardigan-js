@@ -16,6 +16,7 @@ export const SELECTOR_CART_REDEMPTION_APPLY = '[data-cardigan-cart-redemption="a
 export const SELECTOR_CART_REDEMPTION_APPLIED_CARD = '[data-cardigan-cart-redemption="applied-card"]';
 export const SELECTOR_CART_REDEMPTION_REMOVE = '[data-cardigan-cart-redemption="remove"]';
 export const SELECTOR_CART_REDEMPTION_DISCOUNT = '[data-cardigan-cart-redemption="discount"]';
+export const SELECTOR_CART_REDEMPTION_CART_FORM = 'form#cart';
 
 export const SELECTOR_CHECKOUT_DISCOUNT_INPUT = '[data-discount-field="true"]';
 export const SELECTOR_CHECKOUT_FIELDSET = '.fieldset';

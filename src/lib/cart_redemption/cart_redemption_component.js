@@ -19,7 +19,8 @@ import {
   SELECTOR_CART_REDEMPTION_APPLY,
   SELECTOR_CART_REDEMPTION_APPLIED_CARD,
   SELECTOR_CART_REDEMPTION_REMOVE,
-  SELECTOR_CART_REDEMPTION_DISCOUNT
+  SELECTOR_CART_REDEMPTION_DISCOUNT,
+  SELECTOR_CART_REDEMPTION_CART_FORM
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
 
@@ -51,7 +52,7 @@ export class CartRedemptionComponent {
 
     const { componentElement } = this;
 
-    // store references to other elements
+    // store references to other elements in the component
     this.disclosureToggleElement = componentElement.querySelector(SELECTOR_CART_REDEMPTION_DISCLOSURE_TOGGLE);
     this.disclosureContentElement = componentElement.querySelector(SELECTOR_CART_REDEMPTION_DISCLOSURE_CONTENT);
     this.resultElement = componentElement.querySelector(SELECTOR_CART_REDEMPTION_RESULT);
@@ -63,6 +64,9 @@ export class CartRedemptionComponent {
     this.appliedCardElement = componentElement.querySelector(SELECTOR_CART_REDEMPTION_APPLIED_CARD);
     this.removeElement = componentElement.querySelector(SELECTOR_CART_REDEMPTION_REMOVE);
     this.discountElement = componentElement.querySelector(SELECTOR_CART_REDEMPTION_DISCOUNT);
+
+    // store references to external elements
+    this.cartFormElement = document.querySelector(SELECTOR_CART_REDEMPTION_CART_FORM);
 
     // load any cached applied card
     this.appliedCard = this.readAppliedCardCache();
@@ -78,8 +82,12 @@ export class CartRedemptionComponent {
     // render closed disclosure toggle
     this.render('disclosure_toggle_closed', this.disclosureToggleElement);
 
-    // update component
+    // update component and cart form
     this.updateComponent();
+    this.updateCartForm();
+
+    // update (external) cart form
+    this.updateCartForm();
 
     // mark this component element as initialised
     componentElement.dataset.cardigan = 'true';
@@ -145,6 +153,7 @@ export class CartRedemptionComponent {
     this.appliedCard = result.card;
     this.writeAppliedCardCache(this.appliedCard);
     this.updateComponent();
+    this.updateCartForm();
 
     this.render('result_application_success', this.resultElement, this.appliedCard);
   }
@@ -204,6 +213,7 @@ export class CartRedemptionComponent {
     this.appliedCard = null;
     this.writeAppliedCardCache(null);
     this.updateComponent();
+    this.updateCartForm();
 
     this.render('result_default', this.resultElement);
   }
@@ -233,6 +243,25 @@ export class CartRedemptionComponent {
     this.render('applied_card', appliedCardElement, appliedCard || {});
 
     discountElement.value = appliedCard ? appliedCard.code : '';
+  }
+
+  updateCartForm() {
+    const { appliedCard, cartFormElement, cartFormDiscountElement } = this;
+
+    if(!cartFormElement) {
+      return;
+    }
+
+    if(!cartFormDiscountElement) {
+      this.cartFormDiscountElement = document.createElement('input');
+      this.cartFormDiscountElement.type = 'hidden';
+      this.cartFormDiscountElement.name = 'discount';
+      this.cartFormDiscountElement.value = appliedCard ? appliedCard.code : '';
+
+      cartFormElement.appendChild(this.cartFormDiscountElement);
+    } else {
+      cartFormDiscountElement.value = appliedCard ? appliedCard.code : '';
+    }
   }
 
   render(templateNameSuffix, element, context = {}) {
