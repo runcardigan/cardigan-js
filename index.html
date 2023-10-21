@@ -52,11 +52,46 @@
         </label>
 
         <label>
-          Delivery daate
+          Delivery date
           <input data-cardigan-product-form="delivery-date" type="text" name="properties[_delivery_date]" value="" />
         </label>
       </div>
     </form>
+
+    <h1>Cart Redemption</h1>
+    <div data-cardigan-cart-redemption="component">
+      <div data-cardigan-cart-redemption="disclosure-toggle"></div>
+
+      <div data-cardigan-cart-redemption="disclosure-content" style="display: none;">
+        <div data-cardigan-cart-redemption="result"></div>
+
+        <form data-cardigan-cart-redemption="application-form">
+          <label>
+            Number
+            <input data-cardigan-cart-redemption="number" type="number" name="number" value="" />
+          </label>
+
+          <label>
+            PIN
+            <input data-cardigan-cart-redemption="pin" type="number" name="number" value="" />
+          </label>
+
+          <button data-cardigan-cart-redemption="apply" type="submit">
+            Apply
+          </button>
+        </form>
+
+        <form data-cardigan-cart-redemption="removal-form" style="display: none;">
+          <div data-cardigan-cart-redemption="applied-card"></div>
+
+          <button data-cardigan-cart-redemption="remove" type="submit">
+            Remove
+          </button>
+        </form>
+      </div>
+
+      <input data-cardigan-cart-redemption="discount" type="hidden" name="discount" value="" />
+    </div>
 
     <script id="cardigan-config" type="application/json">
       {
@@ -69,9 +104,18 @@
     <script id="cardigan-templates" type="application/json">
       {
         "balance_checker_result_default": "<span>Enter a number and PIN.</span>",
+        "balance_checker_result_error": "<span>{{ errors }}</span>",
         "balance_checker_result_loading": "<span>Loading...</span>",
         "balance_checker_result_success": "<span>{{ balance_formatted }}</span>",
-        "balance_checker_result_error": "<span>{{ errors }}</span>"
+        "cart_redemption_applied_card": "<span>•••• {{ last_characters }}</span>",
+        "cart_redemption_disclosure_toggle_closed": "<span>Apply gift card ▼</span>",
+        "cart_redemption_disclosure_toggle_open": "<span>Apply gift card ▲</span>",
+        "cart_redemption_result_application_loading": "<span>Applying...</span>",
+        "cart_redemption_result_application_success": "<span>{{ balance_formatted }} card applied.</span>",
+        "cart_redemption_result_application_error": "<span>{{ errors }}</span>",
+        "cart_redemption_result_default": "<span>Enter a number and PIN.</span>",
+        "cart_redemption_result_removal_loading": "<span>Removing...</span>",
+        "cart_redemption_result_removal_error": "<span>{{ errors }}</span>"
       }
     </script>
 
