@@ -15,8 +15,9 @@ export const renderHtmlTemplate = (templates, targetElement, templateName, conte
 
   const templateDocument = new DOMParser().parseFromString(interpolatedTemplate, 'text/html');
   const templateElement = templateDocument.querySelector('body > *');
+  const templateContent = (templateElement.nodeName === 'FRAGMENT') ? templateElement.childNodes : [templateElement];
 
-  targetElement[renderMethod](templateElement);
+  targetElement[renderMethod](...templateContent);
 
   return templateElement;
 };
