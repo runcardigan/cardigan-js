@@ -55,3 +55,7 @@ export const DEFAULT_TEMPLATE_CART_REDEMPTION_RESULT_APPLICATION_SUCCESS = '<spa
 export const DEFAULT_TEMPLATE_CART_REDEMPTION_RESULT_APPLICATION_ERROR = '<span>{{ errors }}</span>';
 export const DEFAULT_TEMPLATE_CART_REDEMPTION_RESULT_REMOVAL_LOADING = '<span>Removing...</span>';
 export const DEFAULT_TEMPLATE_CART_REDEMPTION_RESULT_REMOVAL_ERROR = '<span>{{ errors }}</span>';
+
+export const PIN_BEHAVIOUR_REQUIRED = 'required';
+export const PIN_BEHAVIOUR_OPTIONAL = 'optional';
+export const PIN_BEHAVIOUR_NOT_USED = 'not_used';
