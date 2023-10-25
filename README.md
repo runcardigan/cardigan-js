@@ -319,8 +319,7 @@ In a deployed Shopify theme, environment variables like the Cardigan environment
 
 For the purposes of development and testing with this example repository, we need to define these values in a local environment file.
 
-The `.env` file lists the variables required to be set -- when starting development, you should copy this file to a new
-`.env.local` file in the root directory and fill it our with values specific to your environment.
+The `.env` file lists the variables required to be set -- when starting development, you should copy this file to a new `.env.local` file in the root directory and fill it out with values specific to your environment.
 
 * `VITE_CARDIGAN_ENDPOINT`: The Cardigan API endpoint to make requests to; this will almost always be `https://app.runcardigan.com/api/v1` unless you've been provided a specific staging environment URL by the Cardigan support team.
 * `VITE_CUSTOMER_API_SECRET`: The Cardigan Storefront API secret defined for your Shopify store. This should be provided to you by the Cardigan support team, and is used to generate valid JWT tokens in your local development environment for use against the live Cardigan API. For example, `Qqs99Rc29K23fe7kQvfR1LRG`.
@@ -335,7 +334,7 @@ With the above configured, starting the development server and being able to hot
 yarn dev
 ```
 
-The default `index.html` template includes a balance checker widget and a product form; you can also open the development console and make Cardigan API calls directly with commands like `cardigan.api.getCardBalance(...)`.
+The default `index.html` template includes a balance checker widget, a product form and a cart redemption form; you can also open the development console and make Cardigan API calls directly with commands like `cardigan.api.getCardBalance(...)`.
 
 ## Licence
 The Cardigan Javascript library is an open-sourced software licensed under the [MIT license](LICENSE.md).
