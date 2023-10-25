@@ -51,10 +51,14 @@ The latest version of the library is `1.4.0`, which can be loaded and initialise
 <script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.4.0/cardigan.js"></script>
 ```
 
-The required configuration options to be provided in the `cardigan-config` element are:
+The **required** configuration options to be provided in the `cardigan-config` element are:
 
 * `endpoint`: The Cardigan API endpoint to make requests to; this will almost always be `https://app.runcardigan.com/api/v1` unless you've been provided a specific staging environment URL by the Cardigan team;
 * `subdomain`: The Shopify subdomain for your store; the subdomain is the prefix preceding `.myshopify.com` in your store URL.
+
+Some **optional** configuration options are also available:
+
+* `pin_behaviour`: Whether a PIN is required, optional, or not used for balance checking and redemption purposes. Valid values are `required` (default), `optional`, or `not_used`.
 
 #### As an ES6 Module
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
