@@ -6,7 +6,9 @@ import {
   SELECTOR_BALANCE_CHECKER_NUMBER,
   SELECTOR_BALANCE_CHECKER_PIN,
   SELECTOR_BALANCE_CHECKER_RESULT,
-  SELECTOR_BALANCE_CHECKER_SUBMIT
+  SELECTOR_BALANCE_CHECKER_SUBMIT,
+  PIN_BEHAVIOUR_OPTIONAL,
+  PIN_BEHAVIOUR_NOT_USED
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
 
@@ -31,7 +33,7 @@ export class BalanceCheckerForm {
   initialise() {
     this.debug('initialise()');
 
-    const { formElement } = this;
+    const { config, formElement } = this;
 
     // store references to other elements
     this.numberElement = formElement.querySelector(SELECTOR_BALANCE_CHECKER_NUMBER);
@@ -45,6 +47,9 @@ export class BalanceCheckerForm {
     // render the default result state
     this.renderResult('default');
 
+    // set a flag indicating whether a PIN is required, based on the configuration
+    this.pinIsRequired = (config.pin_behaviour !== PIN_BEHAVIOUR_OPTIONAL) && (config.pin_behaviour !== PIN_BEHAVIOUR_NOT_USED);
+
     // mark this form element as initialised
     formElement.dataset.cardigan = 'true';
   }
@@ -52,7 +57,7 @@ export class BalanceCheckerForm {
   handleSubmit(e) {
     this.debug('handleSubmit()', e);
 
-    const { numberElement, pinElement, submitElement, api } = this;
+    const { numberElement, pinElement, submitElement, pinIsRequired, api } = this;
 
     // prevent form submission
     e.preventDefault();
@@ -64,8 +69,8 @@ export class BalanceCheckerForm {
       return false;
     }
 
-    // if the security code input is empty, focus it and return
-    if(pinElement && pinElement.value.trim().length === 0) {
+    // if the pin element input is empty and we require a pin, focus it and return
+    if(pinIsRequired && pinElement && pinElement.value.trim().length === 0) {
       pinElement.focus();
       return false;
     }
@@ -74,14 +79,16 @@ export class BalanceCheckerForm {
     submitElement.classList.add('cardigan-button--loading');
     submitElement.disabled = true;
     numberElement.disabled = true;
-    pinElement.disabled = true;
+    if(pinElement) {
+      pinElement.disabled = true;
+    }
 
     // render the loading result state
     this.renderResult('loading');
 
     // build values for balance request
     const number = numberElement.value;
-    const pin = pinElement.value;
+    const pin = pinElement ? pinElement.value : null;
 
     // make card balance check request
     api.getCardBalance({
@@ -113,9 +120,11 @@ export class BalanceCheckerForm {
     const { numberElement, pinElement, submitElement } = this;
 
     submitElement.classList.remove('cardigan-button--loading');
-    numberElement.disabled = false;
-    pinElement.disabled = false;
     submitElement.disabled = false;
+    numberElement.disabled = false;
+    if(pinElement) {
+      pinElement.disabled = false;
+    }
   }
 
   renderResult(templateNameSuffix, context = {}) {

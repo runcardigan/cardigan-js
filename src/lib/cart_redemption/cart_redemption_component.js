@@ -20,7 +20,9 @@ import {
   SELECTOR_CART_REDEMPTION_APPLIED_CARD,
   SELECTOR_CART_REDEMPTION_REMOVE,
   SELECTOR_CART_REDEMPTION_DISCOUNT,
-  SELECTOR_CART_REDEMPTION_CART_FORM
+  SELECTOR_CART_REDEMPTION_CART_FORM,
+  PIN_BEHAVIOUR_OPTIONAL,
+  PIN_BEHAVIOUR_NOT_USED
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
 
@@ -50,7 +52,7 @@ export class CartRedemptionComponent {
   initialise() {
     this.debug('initialise()');
 
-    const { componentElement } = this;
+    const { componentElement, config } = this;
 
     // store references to other elements in the component
     this.disclosureToggleElement = componentElement.querySelector(SELECTOR_CART_REDEMPTION_DISCLOSURE_TOGGLE);
@@ -89,6 +91,9 @@ export class CartRedemptionComponent {
     // update (external) cart form
     this.updateCartForm();
 
+    // set a flag indicating whether a PIN is required, based on the configuration
+    this.pinIsRequired = (config.pin_behaviour !== PIN_BEHAVIOUR_OPTIONAL) && (config.pin_behaviour !== PIN_BEHAVIOUR_NOT_USED);
+
     // mark this component element as initialised
     componentElement.dataset.cardigan = 'true';
   }
@@ -106,7 +111,7 @@ export class CartRedemptionComponent {
   handleApplicationSubmit(e) {
     this.debug('handleApplicationSubmit()', e);
 
-    const { numberElement, pinElement, applyElement, resultElement, api } = this;
+    const { numberElement, pinElement, applyElement, resultElement, pinIsRequired, api } = this;
 
     // prevent form submission
     e.preventDefault();
@@ -118,8 +123,8 @@ export class CartRedemptionComponent {
       return false;
     }
 
-    // if the pin input is empty, focus it and return
-    if(pinElement && pinElement.value.trim().length === 0) {
+    // if the pin element input is empty and we require a pin, focus it and return
+    if(pinIsRequired && pinElement && pinElement.value.trim().length === 0) {
       pinElement.focus();
       return false;
     }
@@ -128,14 +133,16 @@ export class CartRedemptionComponent {
     applyElement.classList.add('cardigan-button--loading');
     applyElement.disabled = true;
     numberElement.disabled = true;
-    pinElement.disabled = true;
+    if(pinElement) {
+      pinElement.disabled = true;
+    }
 
     // render the loading result state
     this.render('result_application_loading', resultElement);
 
     // build values for application request
     const number = numberElement.value;
-    const pin = pinElement.value;
+    const pin = pinElement ? pinElement.value : null;
 
     // make application request
     api.applyCard({
@@ -172,9 +179,11 @@ export class CartRedemptionComponent {
     const { numberElement, pinElement, applyElement } = this;
 
     applyElement.classList.remove('cardigan-button--loading');
-    numberElement.disabled = false;
-    pinElement.disabled = false;
     applyElement.disabled = false;
+    numberElement.disabled = false;
+    if(pinElement) {
+      pinElement.disabled = false;
+    }
   }
 
   handleRemovalSubmit(e) {
@@ -221,7 +230,15 @@ export class CartRedemptionComponent {
   onRemovalError(result) {
     this.debug('onRemovalError', result);
 
-    this.render('result_removal_error', {
+    // if the removal error was the card not being found, we don't treat that like an error
+    if(result.errors.some(error => {
+      return error.code === 'card_not_found';
+    })) {
+      this.onRemovalSuccess();
+      return;
+    }
+
+    this.render('result_removal_error', this.resultElement, {
       errors: result.errors.map(e => e.description)
     });
   }
