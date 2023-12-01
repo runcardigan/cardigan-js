@@ -22,7 +22,8 @@ import {
   SELECTOR_CART_REDEMPTION_DISCOUNT,
   SELECTOR_CART_REDEMPTION_CART_FORM,
   PIN_BEHAVIOUR_OPTIONAL,
-  PIN_BEHAVIOUR_NOT_USED
+  PIN_BEHAVIOUR_NOT_USED,
+  KEY_ENTER
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
 
@@ -75,8 +76,10 @@ export class CartRedemptionComponent {
 
     // register event listeners
     this.disclosureToggleElement.addEventListener('click', this.handleDisclosureToggleClick.bind(this));
-    this.applicationFormElement.addEventListener('submit', this.handleApplicationSubmit.bind(this));
-    this.removalFormElement.addEventListener('submit', this.handleRemovalSubmit.bind(this));
+    this.numberElement.addEventListener('keyup', (e) => { if(e.key === KEY_ENTER) { this.handleApplicationSubmit(e) }});
+    this.pinElement.addEventListener('keyup', (e) => { if(e.key === KEY_ENTER) { this.handleApplicationSubmit(e) }});
+    this.applyElement.addEventListener('click', this.handleApplicationSubmit.bind(this));
+    this.removeElement.addEventListener('click', this.handleRemovalSubmit.bind(this));
 
     // render the appropriate initial result state
     this.render(this.appliedCard ? 'result_application_success' : 'result_default', this.resultElement, this.appliedCard || {});
