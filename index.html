@@ -65,29 +65,29 @@
       <div data-cardigan-cart-redemption="disclosure-content" style="display: none;">
         <div data-cardigan-cart-redemption="result"></div>
 
-        <form data-cardigan-cart-redemption="application-form">
+        <div data-cardigan-cart-redemption="application-form">
           <label>
             Number
-            <input data-cardigan-cart-redemption="number" type="number" name="number" value="" />
+            <input data-cardigan-cart-redemption="number" type="tel" name="number" value="" />
           </label>
 
           <label>
             PIN
-            <input data-cardigan-cart-redemption="pin" type="number" name="number" value="" />
+            <input data-cardigan-cart-redemption="pin" type="tel" name="number" value="" />
           </label>
 
-          <button data-cardigan-cart-redemption="apply" type="submit">
+          <button data-cardigan-cart-redemption="apply" type="button">
             Apply
           </button>
-        </form>
+        </div>
 
-        <form data-cardigan-cart-redemption="removal-form" style="display: none;">
+        <div data-cardigan-cart-redemption="removal-form" style="display: none;">
           <div data-cardigan-cart-redemption="applied-card"></div>
 
-          <button data-cardigan-cart-redemption="remove" type="submit">
+          <button data-cardigan-cart-redemption="remove" type="button">
             Remove
           </button>
-        </form>
+        </div>
       </div>
 
       <input data-cardigan-cart-redemption="discount" type="hidden" name="discount" value="" />
