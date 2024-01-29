@@ -4,7 +4,9 @@ import {
   SELECTOR_CHECKOUT_FIELDSET,
   SELECTOR_CHECKOUT_FORM,
   SELECTOR_CHECKOUT_PIN_INPUT,
-  SELECTOR_CHECKOUT_SUBMIT_BUTTON
+  SELECTOR_CHECKOUT_SUBMIT_BUTTON,
+  PIN_BEHAVIOUR_NOT_USED,
+  PIN_BEHAVIOUR_OPTIONAL
 } from "../constants";
 import { renderHtmlTemplate } from "../helpers";
 
@@ -23,7 +25,7 @@ export class CheckoutForm {
   initialise() {
     this.debug('initialise()');
 
-    const { formWrapperElement } = this;
+    const { config, formWrapperElement } = this;
 
     // store references to other elements
     this.inputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_DISCOUNT_INPUT);
@@ -31,9 +33,16 @@ export class CheckoutForm {
     this.formElement = this.inputElement.closest(SELECTOR_CHECKOUT_FORM);
     this.submitElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_SUBMIT_BUTTON);
 
-    // render the pin input
-    this.renderPin();
-    this.pinInputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_PIN_INPUT);
+    // set flags based on pin configuration
+    this.pinIsRequired = (config.pin_behaviour !== PIN_BEHAVIOUR_OPTIONAL) && (config.pin_behaviour !== PIN_BEHAVIOUR_NOT_USED);
+    this.pinIsOptional = (config.pin_behaviour === PIN_BEHAVIOUR_OPTIONAL);
+    this.pinIsDisplayed = this.pinIsRequired || this.pinIsOptional;
+
+    // render the pin input if required
+    if(this.pinIsDisplayed) {
+      this.renderPin();
+      this.pinInputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_PIN_INPUT);
+    }
 
     // register event listeners
     this.inputElement.addEventListener('input', this.handleInput.bind(this));
