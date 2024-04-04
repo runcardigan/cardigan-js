@@ -16,6 +16,8 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
     - [Get rewards balance](#get-rewards-balance)
     - [Apply gift card](#apply-gift-card)
     - [Apply rewards balance](#apply-rewards-balance)
+    - [Remove gift card](#remove-gift-card)
+    - [Get shop configuration](#get-shop-configuration)
   - [Development](#development)
   - [Licence](#licence)
 
@@ -288,6 +290,58 @@ cardigan.api.removeCard({
     //     {
     //       "code": "card_not_found",
     //       "description": "Could not find a card with the provided details."
+    //     }
+    //   ]
+    // }
+  },
+  onComplete: () => {
+    // this method will always run regardless of the result
+  }
+});
+```
+
+### Get shop configuration
+Get the Cardigan configuration for the relevant shop.
+The information returned can be used to drive client behaviour.
+
+```js
+cardigan.api.getShopConfiguration({
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "shop_configuration": {
+    //     "card_length": 20,
+    //     "cardigan_js_debug": false,
+    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.4.3/cardigan.js",
+    //     "endpoint": "https://app.runcardigan.com/api/v1",
+    //     "matching": {
+    //       "matching_type": "variant_ids",
+    //       "matching_variant_ids": [
+    //         40632704663594,
+    //         40632702763050
+    //       ]
+    //     },
+    //     "pin_behaviour": "required",
+    //     "pin_pattern": null,
+    //     "property_names": {
+    //       "recipient_name": "_recipient_name",
+    //       "recipient_email": "_recipient_email",
+    //       "sender_name": "_sender_name",
+    //       "greeting": "_greeting",
+    //       "delivery_date": "_delivery_date",
+    //       "card_face_id": "_item_ref"
+    //     },
+    //     "subdomain": "example"
+    //   }
+    // }
+  },
+  onError: (result) => {
+    // this method will run if the API call fails, with `result` populated as:
+    // {
+    //   "errors": [
+    //     {
+    //       "code": "shop_not_found",
+    //       "description": "Could not find shop."
     //     }
     //   ]
     // }
