@@ -26,9 +26,9 @@ const API_METHODS = {
     http_method: POST,
     path: 'cards/:id/remove.json'
   },
-  get_shop_configuration: {
+  get_shop_config: {
     http_method: GET,
-    path: 'shop_configuration.json'
+    path: 'shop_config.json'
   }
 }
 
@@ -231,9 +231,9 @@ export class ApiClient {
     });
   }
 
-  getShopConfiguration({ onSuccess, onError, onComplete }) {
+  getShopConfig({ onSuccess, onError, onComplete }) {
     return this.execute({
-      method: 'get_shop_configuration',
+      method: 'get_shop_config',
       params: {},
       onSuccess,
       onError,

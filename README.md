@@ -17,7 +17,7 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
     - [Apply gift card](#apply-gift-card)
     - [Apply rewards balance](#apply-rewards-balance)
     - [Remove gift card](#remove-gift-card)
-    - [Get shop configuration](#get-shop-configuration)
+    - [Get shop config](#get-shop-config)
   - [Development](#development)
   - [Licence](#licence)
 
@@ -300,16 +300,16 @@ cardigan.api.removeCard({
 });
 ```
 
-### Get shop configuration
+### Get shop config
 Get the Cardigan configuration for the relevant shop.
 The information returned can be used to drive client behaviour.
 
 ```js
-cardigan.api.getShopConfiguration({
+cardigan.api.getShopConfig({
   onSuccess: (result) => {
     // this method will run if the API call succeeds, with `result` populated as:
     // {
-    //   "shop_configuration": {
+    //   "shop_config": {
     //     "card_length": 20,
     //     "cardigan_js_debug": false,
     //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.5.0/cardigan.js",
