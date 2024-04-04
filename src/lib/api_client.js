@@ -25,6 +25,10 @@ const API_METHODS = {
   remove_card: {
     http_method: POST,
     path: 'cards/:id/remove.json'
+  },
+  get_shop_configuration: {
+    http_method: GET,
+    path: 'shop_configuration.json'
   }
 }
 
@@ -160,7 +164,7 @@ export class ApiClient {
         }
       ];
     }
-  };
+  }
 
   getCardBalance({ number, pin, onSuccess, onError, onComplete }) {
     return this.execute({
@@ -221,6 +225,16 @@ export class ApiClient {
       params: {
         id
       },
+      onSuccess,
+      onError,
+      onComplete
+    });
+  }
+
+  getShopConfiguration({ onSuccess, onError, onComplete }) {
+    return this.execute({
+      method: 'get_shop_configuration',
+      params: {},
       onSuccess,
       onError,
       onComplete

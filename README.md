@@ -16,6 +16,8 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
     - [Get rewards balance](#get-rewards-balance)
     - [Apply gift card](#apply-gift-card)
     - [Apply rewards balance](#apply-rewards-balance)
+    - [Remove gift card](#remove-gift-card)
+    - [Get shop configuration](#get-shop-configuration)
   - [Development](#development)
   - [Licence](#licence)
 
@@ -39,7 +41,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.4.3`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.5.0`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -48,7 +50,7 @@ The latest version of the library is `1.4.3`, which can be loaded and initialise
     "subdomain": "example"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.4.3/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.5.0/cardigan.js"></script>
 ```
 
 The **required** configuration options to be provided in the `cardigan-config` element are:
@@ -64,13 +66,13 @@ Some **optional** configuration options are also available:
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.4.3
+npm install runcardigan/cardigan-js#1.5.0
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.4.3
+yarn add runcardigan/cardigan-js#1.5.0
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -288,6 +290,58 @@ cardigan.api.removeCard({
     //     {
     //       "code": "card_not_found",
     //       "description": "Could not find a card with the provided details."
+    //     }
+    //   ]
+    // }
+  },
+  onComplete: () => {
+    // this method will always run regardless of the result
+  }
+});
+```
+
+### Get shop configuration
+Get the Cardigan configuration for the relevant shop.
+The information returned can be used to drive client behaviour.
+
+```js
+cardigan.api.getShopConfiguration({
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "shop_configuration": {
+    //     "card_length": 20,
+    //     "cardigan_js_debug": false,
+    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.5.0/cardigan.js",
+    //     "endpoint": "https://app.runcardigan.com/api/v1",
+    //     "matching": {
+    //       "matching_type": "variant_ids",
+    //       "matching_variant_ids": [
+    //         40632704663594,
+    //         40632702763050
+    //       ]
+    //     },
+    //     "pin_behaviour": "required",
+    //     "pin_pattern": null,
+    //     "property_names": {
+    //       "recipient_name": "_recipient_name",
+    //       "recipient_email": "_recipient_email",
+    //       "sender_name": "_sender_name",
+    //       "greeting": "_greeting",
+    //       "delivery_date": "_delivery_date",
+    //       "card_face_id": "_item_ref"
+    //     },
+    //     "subdomain": "example"
+    //   }
+    // }
+  },
+  onError: (result) => {
+    // this method will run if the API call fails, with `result` populated as:
+    // {
+    //   "errors": [
+    //     {
+    //       "code": "shop_not_found",
+    //       "description": "Could not find shop."
     //     }
     //   ]
     // }
