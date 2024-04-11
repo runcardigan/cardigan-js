@@ -36,10 +36,12 @@ export class CheckoutForm {
     // set flags based on pin configuration
     this.pinIsRequired = (config.pin_behaviour !== PIN_BEHAVIOUR_OPTIONAL) && (config.pin_behaviour !== PIN_BEHAVIOUR_NOT_USED);
     this.pinIsOptional = (config.pin_behaviour === PIN_BEHAVIOUR_OPTIONAL);
-    this.pinIsDisplayed = this.pinIsRequired || this.pinIsOptional;
+    this.pinIsNotUsed = (config.pin_behaviour === PIN_BEHAVIOUR_NOT_USED);
+    this.pinPattern = (this.pinIsOptional && !!config.pin_pattern) ? new RegExp(config.pin_pattern) : null;
+    this.pinMayBeDisplayed = this.pinIsRequired || this.pinIsOptional;
 
-    // render the pin input if required
-    if(this.pinIsDisplayed) {
+    // render the pin input if it may be displayed
+    if(this.pinMayBeDisplayed) {
       this.renderPin();
       this.pinInputElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_PIN_INPUT);
     }
@@ -60,22 +62,19 @@ export class CheckoutForm {
   handleInput(e) {
     this.debug('handleInput()', e);
 
-    this.potentialCard = this.isPotentialCard(this.inputElement.value);
+    this.pinIsDisplayed = this.shouldDisplayPin(this.inputElement.value);
 
-    this.debug('potentialCard', this.potentialCard);
+    this.debug('pinIsDisplayed', this.pinIsDisplayed);
 
-    this.formWrapperElement.classList.toggle('is-potential-card', this.potentialCard);
+    // the `is-potential-card` class name remains for backwards compatibility
+    this.formWrapperElement.classList.toggle('pin-displayed', this.pinIsDisplayed);
+    this.formWrapperElement.classList.toggle('is-potential-card', this.pinIsDisplayed);
   }
 
   handleSubmit(e) {
     this.debug('handleSubmit()', e);
 
-    const { formWrapperElement, potentialCard, inputElement, pinInputElement, submitElement, api } = this;
-
-    // don't prevent submission if no chance of a Givex card
-    if(!potentialCard) {
-      return true;
-    }
+    const { formWrapperElement, inputElement, pinInputElement, submitElement, pinIsRequired, pinPattern, pinIsDisplayed, api } = this;
 
     // don't prevent submission if the force submit flag is set
     if(formWrapperElement.dataset.forceSubmit === 'true') {
@@ -86,8 +85,8 @@ export class CheckoutForm {
     e.preventDefault();
     e.stopPropagation();
 
-    // if the pin input is present and empty, focus it and return
-    if(pinInputElement && pinInputElement.value.trim().length === 0) {
+    // if the pin input is required or conditionally shown and empty, focus it and return
+    if((pinIsRequired || (pinPattern && pinIsDisplayed)) && pinInputElement && pinInputElement.value.trim().length === 0) {
       pinInputElement.focus();
       return false;
     }
@@ -138,17 +137,29 @@ export class CheckoutForm {
     formElement.submit();
   }
 
-  isPotentialCard(value) {
-    this.debug('isPotentialCard()', value);
+  // return whether the PIN input should be displayed to customers
+  //
+  // this used to be `isPotentialCard`, hence the naming of the hook, but has been updated to
+  // more accurately reflect why we are using this value
+  shouldDisplayPin(number) {
+    this.debug('shouldDisplayPin()', number);
 
-    const { config } = this;
+    const { config, pinIsRequired, pinIsNotUsed, pinPattern } = this;
 
     if(config.hooks.isPotentialCard) {
-      return config.hooks.isPotentialCard(value);
+      return config.hooks.isPotentialCard(number);
     }
 
-    const cleanValue = value.replace(/\D/g, '');
-    return cleanValue.length >= config.card_length;
+    if(pinIsRequired) {
+      return true;
+    }
+
+    if(pinIsNotUsed) {
+      return false;
+    }
+
+    const normalizedNumber = number.replace(/\D/g, '');
+    return !pinPattern || pinPattern.test(normalizedNumber);
   }
 
   readAppliedCardCache() {
