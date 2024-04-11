@@ -5,6 +5,7 @@ import {
   DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_ERROR,
   SELECTOR_BALANCE_CHECKER_NUMBER,
   SELECTOR_BALANCE_CHECKER_PIN,
+  SELECTOR_BALANCE_CHECKER_PIN_WRAPPER,
   SELECTOR_BALANCE_CHECKER_RESULT,
   SELECTOR_BALANCE_CHECKER_SUBMIT,
   PIN_BEHAVIOUR_OPTIONAL,
@@ -38,26 +39,42 @@ export class BalanceCheckerForm {
     // store references to other elements
     this.numberElement = formElement.querySelector(SELECTOR_BALANCE_CHECKER_NUMBER);
     this.pinElement = formElement.querySelector(SELECTOR_BALANCE_CHECKER_PIN);
+    this.pinWrapperElement = formElement.querySelector(SELECTOR_BALANCE_CHECKER_PIN_WRAPPER);
     this.resultElement = formElement.querySelector(SELECTOR_BALANCE_CHECKER_RESULT);
     this.submitElement = formElement.querySelector(SELECTOR_BALANCE_CHECKER_SUBMIT);
 
     // register event listeners
     this.formElement.addEventListener('submit', this.handleSubmit.bind(this));
+    this.numberElement.addEventListener('input', this.handleInput.bind(this));
 
     // render the default result state
     this.renderResult('default');
 
-    // set a flag indicating whether a PIN is required, based on the configuration
+    // set flags based on pin configuration
     this.pinIsRequired = (config.pin_behaviour !== PIN_BEHAVIOUR_OPTIONAL) && (config.pin_behaviour !== PIN_BEHAVIOUR_NOT_USED);
+    this.pinIsOptional = (config.pin_behaviour === PIN_BEHAVIOUR_OPTIONAL);
+    this.pinIsNotUsed = (config.pin_behaviour === PIN_BEHAVIOUR_NOT_USED);
+    this.pinPattern = (this.pinIsOptional && !!config.pin_pattern) ? new RegExp(config.pin_pattern) : null;
+
+    // fire the input() event to ensure pin visibility is correct initially
+    this.handleInput();
 
     // mark this form element as initialised
     formElement.dataset.cardigan = 'true';
   }
 
+  handleInput(e) {
+    this.debug('handleInput()', e);
+
+    this.pinIsDisplayed = this.shouldDisplayPin(this.numberElement.value);
+
+    this.pinWrapperElement && (this.pinWrapperElement.style.display = this.pinIsDisplayed ? 'block' : 'none');
+  }
+
   handleSubmit(e) {
     this.debug('handleSubmit()', e);
 
-    const { numberElement, pinElement, submitElement, pinIsRequired, api } = this;
+    const { numberElement, pinElement, submitElement, pinIsRequired, pinPattern, pinIsDisplayed, api } = this;
 
     // prevent form submission
     e.preventDefault();
@@ -69,8 +86,8 @@ export class BalanceCheckerForm {
       return false;
     }
 
-    // if the pin element input is empty and we require a pin, focus it and return
-    if(pinIsRequired && pinElement && pinElement.value.trim().length === 0) {
+    // if the pin input is required or conditionally shown and empty, focus it and return
+    if((pinIsRequired || (pinPattern && pinIsDisplayed)) && pinElement && pinElement.value.trim().length === 0) {
       pinElement.focus();
       return false;
     }
@@ -88,7 +105,7 @@ export class BalanceCheckerForm {
 
     // build values for balance request
     const number = numberElement.value;
-    const pin = pinElement ? pinElement.value : null;
+    const pin = (pinIsDisplayed && pinElement) ? pinElement.value : null;
 
     // make card balance check request
     api.getCardBalance({
@@ -125,6 +142,23 @@ export class BalanceCheckerForm {
     if(pinElement) {
       pinElement.disabled = false;
     }
+  }
+
+  shouldDisplayPin(number) {
+    this.debug('shouldDisplayPin()', number);
+
+    const { pinIsRequired, pinIsNotUsed, pinPattern } = this;
+
+    if(pinIsRequired) {
+      return true;
+    }
+
+    if(pinIsNotUsed) {
+      return false;
+    }
+
+    const normalizedNumber = number.replace(/\D/g, '');
+    return !pinPattern || pinPattern.test(normalizedNumber);
   }
 
   renderResult(templateNameSuffix, context = {}) {
