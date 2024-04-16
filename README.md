@@ -18,6 +18,7 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
     - [Apply rewards balance](#apply-rewards-balance)
     - [Remove gift card](#remove-gift-card)
     - [Get shop config](#get-shop-config)
+    - [Options](#options)
   - [Development](#development)
   - [Licence](#licence)
 
@@ -154,7 +155,7 @@ cardigan.api.getCardBalance({
 Get the rewards balance for the given customer.
 
 This is an authenticated endpoint; when calling it, the Cardigan.js library will automatically request a customer session token for the logged in customer.
-Optionally, a token can be provided explicitly as a `token` argument.
+Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
 
 ```js
 cardigan.api.getRewardsBalance({
@@ -229,7 +230,7 @@ Validate the balance of a customer’s reward account and ensure a corresponding
 It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
 
 This is an authenticated endpoint; when calling it, the Cardigan.js library will automatically request a customer session token for the logged in customer.
-Optionally, a token can be provided explicitly as a `token` argument.
+Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
 
 ```js
 cardigan.api.applyRewards({
@@ -348,6 +349,30 @@ cardigan.api.getShopConfig({
   },
   onComplete: () => {
     // this method will always run regardless of the result
+  }
+});
+```
+
+### Options
+All API method calls can take an `options` argument, allowing a degree of customisation.
+Valid options include:
+
+* `token`: Provide your own customer session token for authenticated endpoints, rather than have Cardigan.js attempt to fetch it automatically.
+* `headers`: Define a hash of custom HTTP headers to pass in the request.
+
+For example, if you wanted to provide your own token to the authenticated rewards balance endpoint, alongside a custom `X-Verification-Token` header, you could call:
+
+```js
+const myToken = 'ue0F2xV3avBIpay3tKuC';
+const myVerificationToken = 'dwbRl5ISEs62Qkert3LV';
+
+cardiganApi.getRewardsBalance({
+  id: '487348390022',
+  options: {
+    token: myToken,
+    headers: {
+        'X-Verification-Token': myVerificationToken
+    }
   }
 });
 ```
