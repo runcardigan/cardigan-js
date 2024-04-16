@@ -92,18 +92,22 @@ export class ApiClient {
     this.locale = locale;
   }
 
-  async execute({ method, params, onSuccess, onError, onComplete, token }) {
+  async execute({ method, params, onSuccess, onError, onComplete, options = {} }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
     const authenticated = getAuthenticated(method);
     const queryParams = getQueryParams(params, this.locale);
 
-    const headers = {
+    // extract options
+    let { token, headers } = options;
+
+    // extend headers with defaults
+    headers = Object.assign({
       'Content-Type': 'application/json; charset=utf-8'
-    }
+    }, headers || {});
 
     // if the endpoint is authenticated, we require a token
-    // this may be passed by the caller or, if not provided, one will be retrieved
+    // this may be passed by the caller in options or, if not provided, one will be retrieved
     if(authenticated) {
       if(!token) {
         let [data, errors] = await this.getToken();
@@ -166,7 +170,7 @@ export class ApiClient {
     }
   }
 
-  getCardBalance({ number, pin, onSuccess, onError, onComplete }) {
+  getCardBalance({ number, pin, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'get_card_balance',
       params: {
@@ -175,11 +179,12 @@ export class ApiClient {
       },
       onSuccess,
       onError,
-      onComplete
+      onComplete,
+      options
     });
   }
 
-  getRewardsBalance({ id, onSuccess, onError, onComplete, token }) {
+  getRewardsBalance({ id, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'get_rewards_balance',
       params: {
@@ -188,11 +193,11 @@ export class ApiClient {
       onSuccess,
       onError,
       onComplete,
-      token
+      options
     });
   }
 
-  applyCard({ number, pin, onSuccess, onError, onComplete }) {
+  applyCard({ number, pin, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'apply_card',
       params: {
@@ -201,11 +206,12 @@ export class ApiClient {
       },
       onSuccess,
       onError,
-      onComplete
+      onComplete,
+      options
     });
   }
 
-  applyRewards({ id, amount, onSuccess, onError, onComplete, token }) {
+  applyRewards({ id, amount, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'apply_rewards',
       params: {
@@ -215,11 +221,11 @@ export class ApiClient {
       onSuccess,
       onError,
       onComplete,
-      token
+      options
     });
   }
 
-  removeCard({ id, onSuccess, onError, onComplete }) {
+  removeCard({ id, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'remove_card',
       params: {
@@ -227,17 +233,19 @@ export class ApiClient {
       },
       onSuccess,
       onError,
-      onComplete
+      onComplete,
+      options
     });
   }
 
-  getShopConfig({ onSuccess, onError, onComplete }) {
+  getShopConfig({ onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'get_shop_config',
       params: {},
       onSuccess,
       onError,
-      onComplete
+      onComplete,
+      options
     });
   }
 }
