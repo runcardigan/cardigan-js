@@ -11,7 +11,7 @@ const API_METHODS = {
   get_rewards_balance: {
     http_method: GET,
     path: 'rewards/:id.json',
-    authenticated: true
+    requires_token: true
   },
   apply_card: {
     http_method: POST,
@@ -20,7 +20,7 @@ const API_METHODS = {
   apply_rewards: {
     http_method: POST,
     path: 'rewards/:id/apply.json',
-    authenticated: true
+    requires_token: true
   },
   remove_card: {
     http_method: POST,
@@ -53,8 +53,8 @@ const getHttpMethod = (method) => {
   return API_METHODS[method].http_method;
 };
 
-// Return whether the given method requires authentication.
-const getAuthenticated = method => (API_METHODS[method].authenticated === true);
+// Return whether the given method requires a token.
+const getRequiresToken = method => (API_METHODS[method].requires_token === true);
 
 // Return a combined set of query parameters for a request
 const getQueryParams = (params, locale) => {
@@ -95,8 +95,8 @@ export class ApiClient {
   async execute({ method, params, onSuccess, onError, onComplete, options = {} }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
-    const authenticated = getAuthenticated(method);
     const queryParams = getQueryParams(params, this.locale);
+    const requiresToken = getRequiresToken(method);
 
     // extract options
     let { token, headers } = options;
@@ -106,20 +106,20 @@ export class ApiClient {
       'Content-Type': 'application/json; charset=utf-8'
     }, headers || {});
 
-    // if the endpoint is authenticated, we require a token
-    // this may be passed by the caller in options or, if not provided, one will be retrieved
-    if(authenticated) {
-      if(!token) {
-        let [data, errors] = await this.getToken();
+    // if the endpoint requires a token and none was provided, retrieve one
+    if(requiresToken && !token) {
+      let [data, errors] = await this.getToken();
 
-        if (errors) {
-          onError && onError(errors);
-          return;
-        }
-
-        token = data.token;
+      if (errors) {
+        onError && onError(errors);
+        return;
       }
 
+      token = data.token;
+    }
+
+    // if we have a token (either passed or retrieved), add it to the authorization header
+    if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
