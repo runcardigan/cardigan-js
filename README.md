@@ -42,7 +42,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.7.0`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.7.1`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -51,7 +51,7 @@ The latest version of the library is `1.7.0`, which can be loaded and initialise
     "subdomain": "example"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.7.0/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.7.1/cardigan.js"></script>
 ```
 
 The **required** configuration options to be provided in the `cardigan-config` element are:
@@ -67,13 +67,13 @@ Some **optional** configuration options are also available:
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.7.0
+npm install runcardigan/cardigan-js#1.7.1
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.7.0
+yarn add runcardigan/cardigan-js#1.7.1
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -154,7 +154,7 @@ cardigan.api.getCardBalance({
 ### Get rewards balance
 Get the rewards balance for the given customer.
 
-This is an authenticated endpoint; when calling it, the Cardigan.js library will automatically request a customer session token for the logged in customer.
+This endpoint requires authentication via a customer session token; when calling it, the Cardigan.js library will automatically request a token for the logged in customer.
 Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
 
 ```js
@@ -229,7 +229,7 @@ Validate the balance of a customer’s reward account and ensure a corresponding
 
 It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
 
-This is an authenticated endpoint; when calling it, the Cardigan.js library will automatically request a customer session token for the logged in customer.
+This endpoint requires authentication via a customer session token; when calling it, the Cardigan.js library will automatically request a token for the logged in customer.
 Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
 
 ```js
@@ -313,7 +313,7 @@ cardigan.api.getShopConfig({
     //   "shop_config": {
     //     "card_length": 20,
     //     "cardigan_js_debug": false,
-    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.7.0/cardigan.js",
+    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.7.1/cardigan.js",
     //     "endpoint": "https://app.runcardigan.com/api/v1",
     //     "matching": {
     //       "matching_type": "variant_ids",
@@ -357,7 +357,7 @@ cardigan.api.getShopConfig({
 All API method calls can take an `options` argument, allowing a degree of customisation.
 Valid options include:
 
-* `token`: Provide your own customer session token for authenticated endpoints, rather than have Cardigan.js attempt to fetch it automatically.
+* `token`: Provide your own session token for authenticated requests.
 * `headers`: Define a hash of custom HTTP headers to pass in the request.
 
 For example, if you wanted to provide your own token to the authenticated rewards balance endpoint, alongside a custom `X-Verification-Token` header, you could call:
@@ -371,7 +371,7 @@ cardiganApi.getRewardsBalance({
   options: {
     token: myToken,
     headers: {
-        'X-Verification-Token': myVerificationToken
+      'X-Verification-Token': myVerificationToken
     }
   }
 });
