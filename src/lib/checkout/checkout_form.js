@@ -134,7 +134,16 @@ export class CheckoutForm {
 
     const { formWrapperElement, formElement } = this;
     formWrapperElement.dataset.forceSubmit = 'true';
-    formElement.submit();
+
+    // if a global Checkout object is available with a jQuery reference, we use that to submit the
+    // discount/gift card form. this is done to trigger the Shopify checkout's ajax submission
+    // functionality for the discount/gift card form, which results in less of a page refresh and
+    // avoids clearing prefilled information from the checkout
+    if(Checkout && Checkout.$) {
+      Checkout.$(formElement).submit();
+    } else {
+      formElement.submit();
+    }
   }
 
   // return whether the PIN input should be displayed to customers
