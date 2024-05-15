@@ -146,20 +146,32 @@ export class CheckoutForm {
 
     const { config, pinIsRequired, pinIsNotUsed, pinPattern } = this;
 
+    // if a custom hook is defined, delegate to the hook
+    // the isPotentialCard language remains to support legacy implementations
     if(config.hooks.isPotentialCard) {
       return config.hooks.isPotentialCard(number);
     }
 
-    if(pinIsRequired) {
-      return true;
-    }
-
+    // if a pin is not used, we can return false early
     if(pinIsNotUsed) {
       return false;
     }
 
     const normalizedNumber = number.replace(/\D/g, '');
-    return !pinPattern || pinPattern.test(normalizedNumber);
+    const numberIsMinimumLength = normalizedNumber.length >= config.card_length;
+
+    // if a pin is required, then display as long as the minimum card length is reached
+    if(pinIsRequired) {
+      return numberIsMinimumLength;
+    }
+
+    // if the pin is optional and a pattern is defined, show the pin input if the number matches that pattern
+    if(pinPattern) {
+      return pinPattern.test(normalizedNumber);
+    }
+
+    // otherwise, if the pin is optional with no pattern defined, show the input if the minimum length is reached
+    return numberIsMinimumLength;
   }
 
   readAppliedCardCache() {
