@@ -33,6 +33,9 @@ export class CheckoutForm {
     this.formElement = this.inputElement.closest(SELECTOR_CHECKOUT_FORM);
     this.submitElement = formWrapperElement.querySelector(SELECTOR_CHECKOUT_SUBMIT_BUTTON);
 
+    // set potential card flag
+    this.potentialCard = false;
+
     // set flags based on pin configuration
     this.pinIsRequired = (config.pin_behaviour !== PIN_BEHAVIOUR_OPTIONAL) && (config.pin_behaviour !== PIN_BEHAVIOUR_NOT_USED);
     this.pinIsOptional = (config.pin_behaviour === PIN_BEHAVIOUR_OPTIONAL);
@@ -62,8 +65,10 @@ export class CheckoutForm {
   handleInput(e) {
     this.debug('handleInput()', e);
 
+    this.potentialCard = this.isPotentialCard(this.inputElement.value);
     this.pinIsDisplayed = this.shouldDisplayPin(this.inputElement.value);
 
+    this.debug('potentialCard', this.potentialCard);
     this.debug('pinIsDisplayed', this.pinIsDisplayed);
 
     // the `is-potential-card` class name remains for backwards compatibility
@@ -74,10 +79,15 @@ export class CheckoutForm {
   handleSubmit(e) {
     this.debug('handleSubmit()', e);
 
-    const { formWrapperElement, inputElement, pinInputElement, submitElement, pinIsRequired, pinPattern, pinIsDisplayed, api } = this;
+    const { formWrapperElement, inputElement, pinInputElement, submitElement, pinIsRequired, pinPattern, potentialCard, pinIsDisplayed, api } = this;
 
     // don't prevent submission if the force submit flag is set
     if(formWrapperElement.dataset.forceSubmit === 'true') {
+      return true;
+    }
+
+    // don't prevent submission if there is no possibility of a card
+    if(!this.potentialCard) {
       return true;
     }
 
@@ -146,32 +156,42 @@ export class CheckoutForm {
     }
   }
 
+  // return whether the provided number is a possible Cardigan card number based on length
+  // this helps distinguish potential gift card numbers from discount codes
+  isPotentialCard(number) {
+    this.debug('isPotentialCard()', number);
+
+    const { config } = this;
+
+    const normalizedNumber = number.replace(/\D/g, '');
+
+    // if a custom hook is defined, delegate to the hook
+    if(config.hooks.isPotentialCard) {
+      return config.hooks.isPotentialCard(normalizedNumber);
+    }
+
+    return normalizedNumber.length >= config.card_length;
+  }
+
   // return whether the PIN input should be displayed to customers
-  //
-  // this used to be `isPotentialCard`, hence the naming of the hook, but has been updated to
-  // more accurately reflect why we are using this value
   shouldDisplayPin(number) {
     this.debug('shouldDisplayPin()', number);
 
     const { config, pinIsRequired, pinIsNotUsed, pinPattern } = this;
 
-    // if a custom hook is defined, delegate to the hook
-    // the isPotentialCard language remains to support legacy implementations
-    if(config.hooks.isPotentialCard) {
-      return config.hooks.isPotentialCard(number);
-    }
+    const isPotentialCard = this.isPotentialCard(number);
 
-    // if a pin is not used, we can return false early
-    if(pinIsNotUsed) {
+    // if the number isn't a potential card or if a pin is not used, we can return false early
+    if(!isPotentialCard || pinIsNotUsed) {
       return false;
     }
 
     const normalizedNumber = number.replace(/\D/g, '');
     const numberIsMinimumLength = normalizedNumber.length >= config.card_length;
 
-    // if a pin is required, then display as long as the minimum card length is reached
+    // if a pin is required, then display
     if(pinIsRequired) {
-      return numberIsMinimumLength;
+      return true;
     }
 
     // if the pin is optional and a pattern is defined, show the pin input if the number matches that pattern
@@ -179,8 +199,8 @@ export class CheckoutForm {
       return pinPattern.test(normalizedNumber);
     }
 
-    // otherwise, if the pin is optional with no pattern defined, show the input if the minimum length is reached
-    return numberIsMinimumLength;
+    // otherwise, return false
+    return true;
   }
 
   readAppliedCardCache() {
