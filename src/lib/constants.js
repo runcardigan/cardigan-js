@@ -40,7 +40,6 @@ export const SELECTOR_PRODUCT_FORM_RECIPIENT_EMAIL = '[data-cardigan-product-for
 export const SELECTOR_PRODUCT_FORM_SENDER_NAME = '[data-cardigan-product-form="sender-name"]';
 export const SELECTOR_PRODUCT_FORM_GREETING = '[data-cardigan-product-form="greeting"]';
 export const SELECTOR_PRODUCT_FORM_DELIVERY_DATE = '[data-cardigan-product-form="delivery-date"]';
-export const SELECTOR_PRODUCT_FORM_PARENT_SECTION = '[data-section]';
 
 export const DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_DEFAULT = '<span></span>';
 export const DEFAULT_TEMPLATE_BALANCE_CHECKER_RESULT_LOADING = '<span></span>';
