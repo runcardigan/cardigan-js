@@ -301,6 +301,40 @@ cardigan.api.removeCard({
 });
 ```
 
+### Verify authorization
+Check the validity of an existing authorization held against a card.
+
+It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
+
+```js
+cardigan.api.verifyAuthorization({
+  id: '0196b7bd-3d4c-c1be-03d5-ac28e835b80a',
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "authorization": {
+    //     "id": "0196b7bd-3d4c-c1be-03d5-ac28e835b80a",
+    //     "expires_at": "2025-05-10T15:07:02+10:00"
+    //   }
+    // }
+  },
+  onError: (result) => {
+    // this method will run if the API call fails, with `result` populated as:
+    // {
+    //   "errors": [
+    //     {
+    //       "code": "authorization_not_found",
+    //       "description": "Could not find an authorization with the provided details."
+    //     }
+    //   ]
+    // }
+  },
+  onComplete: () => {
+    // this method will always run regardless of the result
+  }
+});
+```
+
 ### Get shop config
 Get the Cardigan configuration for the relevant shop.
 The information returned can be used to drive client behaviour.
