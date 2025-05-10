@@ -17,6 +17,7 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
     - [Apply gift card](#apply-gift-card)
     - [Apply rewards balance](#apply-rewards-balance)
     - [Remove gift card](#remove-gift-card)
+    - [Verify authorization](#verify-authorization)
     - [Get shop config](#get-shop-config)
     - [Options](#options)
   - [Development](#development)
@@ -42,7 +43,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.8.2`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.9.0`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -51,7 +52,7 @@ The latest version of the library is `1.8.2`, which can be loaded and initialise
     "subdomain": "example"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.8.2/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.9.0/cardigan.js"></script>
 ```
 
 The **required** configuration options to be provided in the `cardigan-config` element are:
@@ -67,13 +68,13 @@ Some **optional** configuration options are also available:
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.8.2
+npm install runcardigan/cardigan-js#1.9.0
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.8.2
+yarn add runcardigan/cardigan-js#1.9.0
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -301,6 +302,40 @@ cardigan.api.removeCard({
 });
 ```
 
+### Verify authorization
+Check the validity of an existing authorization held against a card.
+
+It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
+
+```js
+cardigan.api.verifyAuthorization({
+  id: '0196b7bd-3d4c-c1be-03d5-ac28e835b80a',
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "authorization": {
+    //     "id": "0196b7bd-3d4c-c1be-03d5-ac28e835b80a",
+    //     "expires_at": "2025-05-10T15:07:02+10:00"
+    //   }
+    // }
+  },
+  onError: (result) => {
+    // this method will run if the API call fails, with `result` populated as:
+    // {
+    //   "errors": [
+    //     {
+    //       "code": "authorization_not_found",
+    //       "description": "Could not find an authorization with the provided details."
+    //     }
+    //   ]
+    // }
+  },
+  onComplete: () => {
+    // this method will always run regardless of the result
+  }
+});
+```
+
 ### Get shop config
 Get the Cardigan configuration for the relevant shop.
 The information returned can be used to drive client behaviour.
@@ -313,7 +348,7 @@ cardigan.api.getShopConfig({
     //   "shop_config": {
     //     "card_length": 20,
     //     "cardigan_js_debug": false,
-    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.8.2/cardigan.js",
+    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.9.0/cardigan.js",
     //     "endpoint": "https://app.runcardigan.com/api/v1",
     //     "matching": {
     //       "matching_type": "variant_ids",

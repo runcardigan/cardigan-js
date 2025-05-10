@@ -4,15 +4,6 @@ const POST = 'post';
 
 // API methods with their corresponding HTTP method and path.
 const API_METHODS = {
-  get_card_balance: {
-    http_method: GET,
-    path: 'cards/:number.json'
-  },
-  get_rewards_balance: {
-    http_method: GET,
-    path: 'rewards/:id.json',
-    requires_token: true
-  },
   apply_card: {
     http_method: POST,
     path: 'cards/:number/apply.json'
@@ -22,13 +13,26 @@ const API_METHODS = {
     path: 'rewards/:id/apply.json',
     requires_token: true
   },
-  remove_card: {
-    http_method: POST,
-    path: 'cards/:id/remove.json'
+  get_card_balance: {
+    http_method: GET,
+    path: 'cards/:number.json'
   },
   get_shop_config: {
     http_method: GET,
     path: 'shop_config.json'
+  },
+  get_rewards_balance: {
+    http_method: GET,
+    path: 'rewards/:id.json',
+    requires_token: true
+  },
+  remove_card: {
+    http_method: POST,
+    path: 'cards/:id/remove.json'
+  },
+  verify_authorization: {
+    http_method: POST,
+    path: 'authorizations/:id/verify.json'
   }
 }
 
@@ -228,6 +232,19 @@ export class ApiClient {
   removeCard({ id, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'remove_card',
+      params: {
+        id
+      },
+      onSuccess,
+      onError,
+      onComplete,
+      options
+    });
+  }
+
+  verifyAuthorization({ id, onSuccess, onError, onComplete, options }) {
+    return this.execute({
+      method: 'verify_authorization',
       params: {
         id
       },
