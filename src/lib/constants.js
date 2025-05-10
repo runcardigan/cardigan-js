@@ -19,20 +19,7 @@ export const SELECTOR_CART_REDEMPTION_REMOVE = '[data-cardigan-cart-redemption="
 export const SELECTOR_CART_REDEMPTION_DISCOUNT = '[data-cardigan-cart-redemption="discount"]';
 export const SELECTOR_CART_REDEMPTION_CART_FORM = 'form#cart, form[action="/cart"]';
 
-export const SELECTOR_CHECKOUT_DISCOUNT_INPUT = '[data-discount-field="true"]';
-export const SELECTOR_CHECKOUT_FIELDSET = '.fieldset';
-export const SELECTOR_CHECKOUT_FORM = 'form';
-export const SELECTOR_CHECKOUT_REDUCTION_FORM_WRAPPER = '[data-reduction-form]:not(.edit_checkout)';
-export const SELECTOR_CHECKOUT_REDUCTION_CODE = '.reduction-code';
-export const SELECTOR_CHECKOUT_PIN_INPUT = '[name="checkout[pin]"]';
-export const SELECTOR_CHECKOUT_SUBMIT_BUTTON = '[type="submit"]';
-
 export const CART_REDEMPTION_APPLIED_CARD_CACHE_KEY = 'cardigan:applied_card';
-
-export const CHECKOUT_STEP_CONTACT_INFORMATION = 'contact_information';
-export const CHECKOUT_STEP_PAYMENT_METHOD = 'shipping_method';
-export const CHECKOUT_STEP_SHIPPING_METHOD = 'payment_method';
-export const CHECKOUT_APPLIED_CARDS_CACHE_KEY = 'cardigan:applied_cards';
 
 export const SELECTOR_PRODUCT_FORM_FORM = '[data-cardigan-product-form="form"]';
 export const SELECTOR_PRODUCT_FORM_RECIPIENT_NAME = '[data-cardigan-product-form="recipient-name"]';
