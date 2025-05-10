@@ -17,6 +17,7 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
     - [Apply gift card](#apply-gift-card)
     - [Apply rewards balance](#apply-rewards-balance)
     - [Remove gift card](#remove-gift-card)
+    - [Verify authorization](#verify-authorization)
     - [Get shop config](#get-shop-config)
     - [Options](#options)
   - [Development](#development)
