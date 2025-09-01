@@ -436,6 +436,7 @@ For the purposes of development and testing with this example repository, we nee
 The `.env` file lists the variables required to be set -- when starting development, you should copy this file to a new `.env.local` file in the root directory and fill it out with values specific to your environment.
 
 * `VITE_CARDIGAN_ENDPOINT`: The Cardigan API endpoint to make requests to; this will almost always be `https://app.runcardigan.com/api/v1` unless you've been provided a specific staging environment URL by the Cardigan support team.
+* `VITE_CURRENCY`: By default, Cardigan will use the default currency of the store when looking to match a profile for use with a particular request. The currency can be overridden via the `currency` configuration option, which is set in the local development environment with this variable.
 * `VITE_CUSTOMER_API_SECRET`: The Cardigan Storefront API secret defined for your Shopify store. This should be provided to you by the Cardigan support team, and is used to generate valid JWT tokens in your local development environment for use against the live Cardigan API. For example, `Qqs99Rc29K23fe7kQvfR1LRG`.
 * `VITE_CUSTOMER_ID`: The numerical ID for the Shopify customer you would like to use for development purposes. For example, `7225251091539`.
 * `VITE_LOCALE`: By default, Cardigan will use the default locale of the store to generate formatted responses and messages. The locale can be overridden via the `locale` configuration option, which is set in the local development environment with this variable.
