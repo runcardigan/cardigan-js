@@ -5,8 +5,8 @@ import { ProductForm } from "./product_form/product_form";
 
 class Cardigan {
 
-  constructor(document, Shopify, config = {}, templates = {}) {
-    const api = new ApiClient(config);
+  constructor(document, Shopify, config = {}, context = {}, templates = {}) {
+    const api = new ApiClient(config, context);
     this.api = api;
     this.balanceChecker = new BalanceChecker(document, api, config, templates);
     this.cartRedemption = new CartRedemption(document, api, config, templates);

@@ -52,6 +52,12 @@ The latest version of the library is `1.10.0`, which can be loaded and initialis
     "subdomain": "example"
   }
 </script>
+<script id="cardigan-context" type="application/json">
+  {
+    "currency": "USD",
+    "locale": "en-US"
+  }
+</script>
 <script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.10.0/cardigan.js"></script>
 ```
 
@@ -63,6 +69,11 @@ The **required** configuration options to be provided in the `cardigan-config` e
 Some **optional** configuration options are also available:
 
 * `pin_behaviour`: Whether a PIN is required, optional, or not used for balance checking and redemption purposes. Valid values are `required` (default), `optional`, or `not_used`.
+
+The `cardigan-context` element is **optional** and can be used to provide context to Cardigan in situations where multiple currencies or locales may need to be supported:
+
+* `currency`: The currency being used in the current context. If omitted, the store's default currency will be assumed;
+* `locale`: The locale being used in the current context. If omitted, the store's default locale will be assumed.
 
 #### As an ES6 Module
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
@@ -90,6 +101,10 @@ const cardigan = new Cardigan(
   {
     "endpoint": "https://app.runcardigan.com/api/v1",
     "subdomain": "example"
+  },
+  {
+    "currency": "USD",
+    "locale": "en-US"
   }
 );
 
@@ -104,10 +119,13 @@ If you're looking purely to interact with the Cardigan API, you can initialise o
 // import Cardigan API library only
 import { CardiganApi } from "cardigan-js";
 
-// initialise a Cardigan API instance with configuration options
+// initialise a Cardigan API instance with configuration options and context information
 const cardiganApi = new CardiganApi({
   "endpoint": "https://app.runcardigan.com/api/v1",
   "subdomain": "example"
+}, {
+  "currency": "USD",
+  "locale": "en-US"
 });
 
 // use the client
@@ -436,10 +454,10 @@ For the purposes of development and testing with this example repository, we nee
 The `.env` file lists the variables required to be set -- when starting development, you should copy this file to a new `.env.local` file in the root directory and fill it out with values specific to your environment.
 
 * `VITE_CARDIGAN_ENDPOINT`: The Cardigan API endpoint to make requests to; this will almost always be `https://app.runcardigan.com/api/v1` unless you've been provided a specific staging environment URL by the Cardigan support team.
-* `VITE_CURRENCY`: By default, Cardigan will use the default currency of the store when looking to match a profile for use with a particular request. The currency can be overridden via the `currency` configuration option, which is set in the local development environment with this variable.
+* `VITE_CURRENCY`: By default, Cardigan will use the default currency of the store when looking to match a profile for use with a particular request. The currency can be overridden via the `currency` context option, which is set in the local development environment with this variable.
 * `VITE_CUSTOMER_API_SECRET`: The Cardigan Storefront API secret defined for your Shopify store. This should be provided to you by the Cardigan support team, and is used to generate valid JWT tokens in your local development environment for use against the live Cardigan API. For example, `Qqs99Rc29K23fe7kQvfR1LRG`.
 * `VITE_CUSTOMER_ID`: The numerical ID for the Shopify customer you would like to use for development purposes. For example, `7225251091539`.
-* `VITE_LOCALE`: By default, Cardigan will use the default locale of the store to generate formatted responses and messages. The locale can be overridden via the `locale` configuration option, which is set in the local development environment with this variable.
+* `VITE_LOCALE`: By default, Cardigan will use the default locale of the store to generate formatted responses and messages. The locale can be overridden via the `locale` context option, which is set in the local development environment with this variable.
 * `VITE_SHOPIFY_SUBDOMAIN`: The domain prefix  for the Shopify store you would like to use for development purposes. For example, this value would be `store` for a Shopify store with the domain `store.myshopify.com`.
 
 ### Starting the development server
