@@ -43,7 +43,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.9.0`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.10.0`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -52,7 +52,7 @@ The latest version of the library is `1.9.0`, which can be loaded and initialise
     "subdomain": "example"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.9.0/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.10.0/cardigan.js"></script>
 ```
 
 The **required** configuration options to be provided in the `cardigan-config` element are:
@@ -68,13 +68,13 @@ Some **optional** configuration options are also available:
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.9.0
+npm install runcardigan/cardigan-js#1.10.0
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.9.0
+yarn add runcardigan/cardigan-js#1.10.0
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -348,7 +348,7 @@ cardigan.api.getShopConfig({
     //   "shop_config": {
     //     "card_length": 20,
     //     "cardigan_js_debug": false,
-    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.9.0/cardigan.js",
+    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.10.0/cardigan.js",
     //     "endpoint": "https://app.runcardigan.com/api/v1",
     //     "matching": {
     //       "matching_type": "variant_ids",
@@ -436,6 +436,7 @@ For the purposes of development and testing with this example repository, we nee
 The `.env` file lists the variables required to be set -- when starting development, you should copy this file to a new `.env.local` file in the root directory and fill it out with values specific to your environment.
 
 * `VITE_CARDIGAN_ENDPOINT`: The Cardigan API endpoint to make requests to; this will almost always be `https://app.runcardigan.com/api/v1` unless you've been provided a specific staging environment URL by the Cardigan support team.
+* `VITE_CURRENCY`: By default, Cardigan will use the default currency of the store when looking to match a profile for use with a particular request. The currency can be overridden via the `currency` configuration option, which is set in the local development environment with this variable.
 * `VITE_CUSTOMER_API_SECRET`: The Cardigan Storefront API secret defined for your Shopify store. This should be provided to you by the Cardigan support team, and is used to generate valid JWT tokens in your local development environment for use against the live Cardigan API. For example, `Qqs99Rc29K23fe7kQvfR1LRG`.
 * `VITE_CUSTOMER_ID`: The numerical ID for the Shopify customer you would like to use for development purposes. For example, `7225251091539`.
 * `VITE_LOCALE`: By default, Cardigan will use the default locale of the store to generate formatted responses and messages. The locale can be overridden via the `locale` configuration option, which is set in the local development environment with this variable.

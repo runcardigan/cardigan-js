@@ -61,8 +61,9 @@ const getHttpMethod = (method) => {
 const getRequiresToken = method => (API_METHODS[method].requires_token === true);
 
 // Return a combined set of query parameters for a request
-const getQueryParams = (params, locale) => {
+const getQueryParams = (params, currency, locale) => {
   const defaultParams = {
+    currency,
     locale
   };
 
@@ -90,16 +91,17 @@ const buildQueryString = (params) => {
 
 export class ApiClient {
 
-  constructor({ subdomain, endpoint, locale }) {
+  constructor({ subdomain, endpoint, currency, locale }) {
     this.subdomain = subdomain;
     this.endpoint = endpoint;
+    this.currency = currency;
     this.locale = locale;
   }
 
   async execute({ method, params, onSuccess, onError, onComplete, options = {} }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
-    const queryParams = getQueryParams(params, this.locale);
+    const queryParams = getQueryParams(params, this.currency, this.locale);
     const requiresToken = getRequiresToken(method);
 
     // extract options
