@@ -91,7 +91,7 @@ const buildQueryString = (params) => {
 
 export class ApiClient {
 
-  constructor({ subdomain, endpoint, currency, locale }) {
+  constructor({ subdomain, endpoint }, { currency, locale }) {
     this.subdomain = subdomain;
     this.endpoint = endpoint;
     this.currency = currency;
