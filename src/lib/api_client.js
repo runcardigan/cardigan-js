@@ -176,12 +176,13 @@ export class ApiClient {
     }
   }
 
-  getCardBalance({ number, pin, onSuccess, onError, onComplete, options }) {
+  getCardBalance({ number, pin, includeTransactions, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'get_card_balance',
       params: {
         number,
-        pin
+        pin,
+        include_transactions: includeTransactions
       },
       onSuccess,
       onError,

@@ -170,6 +170,47 @@ cardigan.api.getCardBalance({
 });
 ```
 
+Optionally, you can provide the boolean `includeTransactions` argument set to `true` - if the provider supports returning a transaction history for the card, it will be returned alongside card information.
+
+```js
+cardigan.api.getCardBalance({
+  number: '84142498040559305028',
+  pin: '8521',
+  includeTransactions: true,
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "card": {
+    //     "currency": "CAD",
+    //     "balance": "100.00",
+    //     "balance_formatted": "$100.00",
+    //     "expires_at": null
+    //   },
+    //   "transactions": [
+    //     {
+    //       "id": "9428085207",
+    //       "type": "debit",
+    //       "amount": "25.0",
+    //       "amount_formatted": "$25.00",
+    //       "reference": "945299",
+    //       "timestamp": "2021-05-07T21:31:46-04:00",
+    //       "timestamp_formatted": "Fri, 07 May 2021 21:31:46 -0400"
+    //     },
+    //     {
+    //       "id": "9416107933",
+    //       "type": "credit",
+    //       "amount": "200.0",
+    //       "amount_formatted": "$200.00",
+    //       "reference": "947933",
+    //       "timestamp": "2019-10-08T22:15:01-04:00",
+    //       "timestamp_formatted": "Tue, 08 Oct 2019 22:15:01 -0400"
+    //     }
+    //   ]
+    // }
+  }
+});
+```
+
 ### Get rewards balance
 Get the rewards balance for the given customer.
 
