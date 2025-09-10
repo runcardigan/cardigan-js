@@ -43,7 +43,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.11.0`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.11.1`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -58,7 +58,7 @@ The latest version of the library is `1.11.0`, which can be loaded and initialis
     "locale": "en-US"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.11.0/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.11.1/cardigan.js"></script>
 ```
 
 The **required** configuration options to be provided in the `cardigan-config` element are:
@@ -79,13 +79,13 @@ The `cardigan-context` element is **optional** and can be used to provide contex
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.11.0
+npm install runcardigan/cardigan-js#1.11.1
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.11.0
+yarn add runcardigan/cardigan-js#1.11.1
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -166,6 +166,47 @@ cardigan.api.getCardBalance({
   },
   onComplete: () => {
     // this method will always run regardless of the result
+  }
+});
+```
+
+Optionally, you can provide the boolean `includeTransactions` argument set to `true` - if the provider supports returning a transaction history for the card, it will be returned alongside card information.
+
+```js
+cardigan.api.getCardBalance({
+  number: '84142498040559305028',
+  pin: '8521',
+  includeTransactions: true,
+  onSuccess: (result) => {
+    // this method will run if the API call succeeds, with `result` populated as:
+    // {
+    //   "card": {
+    //     "currency": "CAD",
+    //     "balance": "100.00",
+    //     "balance_formatted": "$100.00",
+    //     "expires_at": null
+    //   },
+    //   "transactions": [
+    //     {
+    //       "id": "9428085207",
+    //       "type": "debit",
+    //       "amount": "25.0",
+    //       "amount_formatted": "$25.00",
+    //       "reference": "945299",
+    //       "timestamp": "2021-05-07T21:31:46-04:00",
+    //       "timestamp_formatted": "Fri, 07 May 2021 21:31:46 -0400"
+    //     },
+    //     {
+    //       "id": "9416107933",
+    //       "type": "credit",
+    //       "amount": "200.0",
+    //       "amount_formatted": "$200.00",
+    //       "reference": "947933",
+    //       "timestamp": "2019-10-08T22:15:01-04:00",
+    //       "timestamp_formatted": "Tue, 08 Oct 2019 22:15:01 -0400"
+    //     }
+    //   ]
+    // }
   }
 });
 ```
@@ -366,7 +407,7 @@ cardigan.api.getShopConfig({
     //   "shop_config": {
     //     "card_length": 20,
     //     "cardigan_js_debug": false,
-    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.11.0/cardigan.js",
+    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.11.1/cardigan.js",
     //     "endpoint": "https://app.runcardigan.com/api/v1",
     //     "matching": {
     //       "matching_type": "variant_ids",
