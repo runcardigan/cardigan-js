@@ -4,7 +4,7 @@
   "description": "Javascript library for Cardigan, an omnichannel external gift card integration for Shopify and Shopify Plus.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/discolabs/cardigan-js.git"
+    "url": "git+https://github.com/discolabs/cardigan-js.git"
   },
   "keywords": [
     "gift card",
