@@ -13,9 +13,7 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
       - [As an ES6 Module](#as-an-es6-module)
   - [Reference](#reference)
     - [Get card balance](#get-card-balance)
-    - [Get rewards balance](#get-rewards-balance)
     - [Apply gift card](#apply-gift-card)
-    - [Apply rewards balance](#apply-rewards-balance)
     - [Remove gift card](#remove-gift-card)
     - [Verify authorization](#verify-authorization)
     - [Get shop config](#get-shop-config)
@@ -43,7 +41,7 @@ Some high-level information on each of these approaches is provided below, and y
 #### From the Cardigan CDN
 The Cardigan CDN is a performant, edge-cached delivery system that makes all current and historical versions of the Cardigan.js library available directly to the browser.
 
-The latest version of the library is `1.11.1`, which can be loaded and initialised on required pages like this:
+The latest version of the library is `1.12.0`, which can be loaded and initialised on required pages like this:
 
 ```liquid
 <script id="cardigan-config" type="application/json">
@@ -58,7 +56,7 @@ The latest version of the library is `1.11.1`, which can be loaded and initialis
     "locale": "en-US"
   }
 </script>
-<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.11.1/cardigan.js"></script>
+<script type="text/javascript" src="https://cdn.runcardigan.com/cardigan-js/1.12.0/cardigan.js"></script>
 ```
 
 The **required** configuration options to be provided in the `cardigan-config` element are:
@@ -79,13 +77,13 @@ The `cardigan-context` element is **optional** and can be used to provide contex
 If you have an existing ES6-based build process for your front end, you can add Cardigan.js as a dependency with NPM:
 
 ```shell
-npm install runcardigan/cardigan-js#1.11.1
+npm install runcardigan/cardigan-js#1.12.0
 ```
 
 or Yarn:
 
 ```shell
-yarn add runcardigan/cardigan-js#1.11.1
+yarn add runcardigan/cardigan-js#1.12.0
 ```
 
 You can then import the `Cardigan` class and initialise it with the same configuration options as described above:
@@ -211,42 +209,6 @@ cardigan.api.getCardBalance({
 });
 ```
 
-### Get rewards balance
-Get the rewards balance for the given customer.
-
-This endpoint requires authentication via a customer session token; when calling it, the Cardigan.js library will automatically request a token for the logged in customer.
-Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
-
-```js
-cardigan.api.getRewardsBalance({
-  id: '487348390022',
-  onSuccess: (result) => {
-    // this method will run if the API call succeeds, with `result` populated as:
-    // {
-    //   "rewards": {
-    //     "currency": "CAD",
-    //     "balance": "100.00",
-    //     "balance_formatted": "$100.00"
-    //   }
-    // }
-  },
-  onError: (result) => {
-    // this method will run if the API call fails, with `result` populated as:
-    // {
-    //   "errors": [
-    //     {
-    //       "code": "customer_not_found",
-    //       "description": "Could not find customer account."
-    //     }
-    //   ]
-    // }
-  },
-  onComplete: () => {
-    // this method will always run regardless of the result
-  }
-});
-```
-
 ### Apply gift card
 Validate the balance of a gift card and ensure a corresponding Shopify gift card is present, so that it can be applied to the Shopify checkout if required.
 
@@ -274,47 +236,6 @@ cardigan.api.applyCard({
     //     {
     //       "code": "invalid_pin",
     //       "description": "Provided PIN is invalid."
-    //     }
-    //   ]
-    // }
-  },
-  onComplete: () => {
-    // this method will always run regardless of the result
-  }
-});
-```
-
-### Apply rewards balance
-Validate the balance of a customer’s reward account and ensure a corresponding Shopify gift card is present, so that it can be applied to the Shopify checkout if required.
-
-It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
-
-This endpoint requires authentication via a customer session token; when calling it, the Cardigan.js library will automatically request a token for the logged in customer.
-Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
-
-```js
-cardigan.api.applyRewards({
-  id: '487348390022',
-  amount: '25.00',
-  onSuccess: (result) => {
-    // this method will run if the API call succeeds, with `result` populated as:
-    // {
-    //   "reward": {
-    //     "id": "018607f9-ce90-420f-cd2e-365a14515365",
-    //     "code": "2402476c03f20e56RWRD",
-    //     "currency": "CAD",
-    //     "balance": "100.00",
-    //     "amount": "75.00"
-    //   }
-    // }
-  },
-  onError: (result) => {
-    // this method will run if the API call fails, with `result` populated as:
-    // {
-    //   "errors": [
-    //     {
-    //       "code": "unauthorized",
-    //       "description": "Unauthorized."
     //     }
     //   ]
     // }
@@ -407,7 +328,7 @@ cardigan.api.getShopConfig({
     //   "shop_config": {
     //     "card_length": 20,
     //     "cardigan_js_debug": false,
-    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.11.1/cardigan.js",
+    //     "cardigan_js_uri": "https://cdn.runcardigan.com/cardigan-js/1.12.0/cardigan.js",
     //     "endpoint": "https://app.runcardigan.com/api/v1",
     //     "matching": {
     //       "matching_type": "variant_ids",
@@ -443,30 +364,6 @@ cardigan.api.getShopConfig({
   },
   onComplete: () => {
     // this method will always run regardless of the result
-  }
-});
-```
-
-### Options
-All API method calls can take an `options` argument, allowing a degree of customisation.
-Valid options include:
-
-* `token`: Provide your own session token for authenticated requests.
-* `headers`: Define a hash of custom HTTP headers to pass in the request.
-
-For example, if you wanted to provide your own token to the authenticated rewards balance endpoint, alongside a custom `X-Verification-Token` header, you could call:
-
-```js
-const myToken = 'ue0F2xV3avBIpay3tKuC';
-const myVerificationToken = 'dwbRl5ISEs62Qkert3LV';
-
-cardiganApi.getRewardsBalance({
-  id: '487348390022',
-  options: {
-    token: myToken,
-    headers: {
-      'X-Verification-Token': myVerificationToken
-    }
   }
 });
 ```
