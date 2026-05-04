@@ -13,9 +13,7 @@ You can learn more about Cardigan at https://docs.runcardigan.com.
       - [As an ES6 Module](#as-an-es6-module)
   - [Reference](#reference)
     - [Get card balance](#get-card-balance)
-    - [Get rewards balance](#get-rewards-balance)
     - [Apply gift card](#apply-gift-card)
-    - [Apply rewards balance](#apply-rewards-balance)
     - [Remove gift card](#remove-gift-card)
     - [Verify authorization](#verify-authorization)
     - [Get shop config](#get-shop-config)
@@ -366,30 +364,6 @@ cardigan.api.getShopConfig({
   },
   onComplete: () => {
     // this method will always run regardless of the result
-  }
-});
-```
-
-### Options
-All API method calls can take an `options` argument, allowing a degree of customisation.
-Valid options include:
-
-* `token`: Provide your own session token for authenticated requests.
-* `headers`: Define a hash of custom HTTP headers to pass in the request.
-
-For example, if you wanted to provide your own token to the authenticated rewards balance endpoint, alongside a custom `X-Verification-Token` header, you could call:
-
-```js
-const myToken = 'ue0F2xV3avBIpay3tKuC';
-const myVerificationToken = 'dwbRl5ISEs62Qkert3LV';
-
-cardiganApi.getRewardsBalance({
-  id: '487348390022',
-  options: {
-    token: myToken,
-    headers: {
-      'X-Verification-Token': myVerificationToken
-    }
   }
 });
 ```
