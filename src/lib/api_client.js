@@ -6,12 +6,11 @@ const POST = 'post';
 const API_METHODS = {
   apply_card: {
     http_method: POST,
-    path: 'cards/:number/apply.json'
-  },
+    path: 'cards/apply.json'
   },
   get_card_balance: {
-    http_method: GET,
-    path: 'cards/:number.json'
+    http_method: POST,
+    path: 'cards/balance.json'
   },
   get_shop_config: {
     http_method: GET,
@@ -51,12 +50,25 @@ const getHttpMethod = (method) => {
 // Return whether the given method requires a token.
 const getRequiresToken = method => (API_METHODS[method].requires_token === true);
 
-// Return a combined set of query parameters for a request
-const getQueryParams = (params, currency, locale) => {
+// Get the request body for a request
+const getBody = (httpMethod, params) => {
+  if (httpMethod !== POST) {
+    return null;
+  }
+
+  return JSON.stringify(params);
+}
+
+// Return query parameters for a request - default parameters optionally merged with query parameters for a GET request
+const getQueryParams = (httpMethod, params, currency, locale) => {
   const defaultParams = {
     currency,
     locale
   };
+
+  if (httpMethod !== GET) {
+    return defaultParams;
+  }
 
   return Object.assign({}, defaultParams, params);
 };
@@ -92,7 +104,8 @@ export class ApiClient {
   async execute({ method, params, onSuccess, onError, onComplete, options = {} }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
-    const queryParams = getQueryParams(params, this.currency, this.locale);
+    const body = getBody(httpMethod, params);
+    const queryParams = getQueryParams(httpMethod, params, this.currency, this.locale);
     const requiresToken = getRequiresToken(method);
 
     // extract options
@@ -121,9 +134,10 @@ export class ApiClient {
     }
 
     const response = await fetch(url + buildQueryString(queryParams), {
+      body,
+      headers,
       method: httpMethod,
-      mode: 'cors',
-      headers: headers
+      mode: 'cors'
     });
 
     const json = await response.json();
