@@ -211,42 +211,6 @@ cardigan.api.getCardBalance({
 });
 ```
 
-### Get rewards balance
-Get the rewards balance for the given customer.
-
-This endpoint requires authentication via a customer session token; when calling it, the Cardigan.js library will automatically request a token for the logged in customer.
-Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
-
-```js
-cardigan.api.getRewardsBalance({
-  id: '487348390022',
-  onSuccess: (result) => {
-    // this method will run if the API call succeeds, with `result` populated as:
-    // {
-    //   "rewards": {
-    //     "currency": "CAD",
-    //     "balance": "100.00",
-    //     "balance_formatted": "$100.00"
-    //   }
-    // }
-  },
-  onError: (result) => {
-    // this method will run if the API call fails, with `result` populated as:
-    // {
-    //   "errors": [
-    //     {
-    //       "code": "customer_not_found",
-    //       "description": "Could not find customer account."
-    //     }
-    //   ]
-    // }
-  },
-  onComplete: () => {
-    // this method will always run regardless of the result
-  }
-});
-```
-
 ### Apply gift card
 Validate the balance of a gift card and ensure a corresponding Shopify gift card is present, so that it can be applied to the Shopify checkout if required.
 
@@ -274,47 +238,6 @@ cardigan.api.applyCard({
     //     {
     //       "code": "invalid_pin",
     //       "description": "Provided PIN is invalid."
-    //     }
-    //   ]
-    // }
-  },
-  onComplete: () => {
-    // this method will always run regardless of the result
-  }
-});
-```
-
-### Apply rewards balance
-Validate the balance of a customer’s reward account and ensure a corresponding Shopify gift card is present, so that it can be applied to the Shopify checkout if required.
-
-It's rare that you will need to call this endpoint unless you're developing your own custom checkout integration with Cardigan.
-
-This endpoint requires authentication via a customer session token; when calling it, the Cardigan.js library will automatically request a token for the logged in customer.
-Optionally, a token can be provided explicitly as part of the `options` argument (see [options](#options)).
-
-```js
-cardigan.api.applyRewards({
-  id: '487348390022',
-  amount: '25.00',
-  onSuccess: (result) => {
-    // this method will run if the API call succeeds, with `result` populated as:
-    // {
-    //   "reward": {
-    //     "id": "018607f9-ce90-420f-cd2e-365a14515365",
-    //     "code": "2402476c03f20e56RWRD",
-    //     "currency": "CAD",
-    //     "balance": "100.00",
-    //     "amount": "75.00"
-    //   }
-    // }
-  },
-  onError: (result) => {
-    // this method will run if the API call fails, with `result` populated as:
-    // {
-    //   "errors": [
-    //     {
-    //       "code": "unauthorized",
-    //       "description": "Unauthorized."
     //     }
     //   ]
     // }

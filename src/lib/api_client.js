@@ -8,10 +8,6 @@ const API_METHODS = {
     http_method: POST,
     path: 'cards/:number/apply.json'
   },
-  apply_rewards: {
-    http_method: POST,
-    path: 'rewards/:id/apply.json',
-    requires_token: true
   },
   get_card_balance: {
     http_method: GET,
@@ -20,11 +16,6 @@ const API_METHODS = {
   get_shop_config: {
     http_method: GET,
     path: 'shop_config.json'
-  },
-  get_rewards_balance: {
-    http_method: GET,
-    path: 'rewards/:id.json',
-    requires_token: true
   },
   remove_card: {
     http_method: POST,
@@ -191,39 +182,12 @@ export class ApiClient {
     });
   }
 
-  getRewardsBalance({ id, onSuccess, onError, onComplete, options }) {
-    return this.execute({
-      method: 'get_rewards_balance',
-      params: {
-        id
-      },
-      onSuccess,
-      onError,
-      onComplete,
-      options
-    });
-  }
-
   applyCard({ number, pin, onSuccess, onError, onComplete, options }) {
     return this.execute({
       method: 'apply_card',
       params: {
         number,
         pin
-      },
-      onSuccess,
-      onError,
-      onComplete,
-      options
-    });
-  }
-
-  applyRewards({ id, amount, onSuccess, onError, onComplete, options }) {
-    return this.execute({
-      method: 'apply_rewards',
-      params: {
-        id,
-        amount
       },
       onSuccess,
       onError,
