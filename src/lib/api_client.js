@@ -64,7 +64,7 @@ const getQueryParams = (httpMethod, params, currency, locale, locationId) => {
   const defaultParams = {
     currency,
     locale,
-    locationId
+    location_id: locationId
   };
 
   if (httpMethod !== GET) {
