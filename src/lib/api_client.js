@@ -60,10 +60,11 @@ const getBody = (httpMethod, params) => {
 }
 
 // Return query parameters for a request - default parameters optionally merged with query parameters for a GET request
-const getQueryParams = (httpMethod, params, currency, locale) => {
+const getQueryParams = (httpMethod, params, currency, locale, locationId) => {
   const defaultParams = {
     currency,
-    locale
+    locale,
+    locationId
   };
 
   if (httpMethod !== GET) {
@@ -94,18 +95,19 @@ const buildQueryString = (params) => {
 
 export class ApiClient {
 
-  constructor({ subdomain, endpoint }, { currency, locale }) {
+  constructor({ subdomain, endpoint }, { currency, locale, locationId }) {
     this.subdomain = subdomain;
     this.endpoint = endpoint;
     this.currency = currency;
     this.locale = locale;
+    this.locationId = locationId;
   }
 
   async execute({ method, params, onSuccess, onError, onComplete, options = {} }) {
     const url = getUrl(this.endpoint, this.subdomain, method, params);
     const httpMethod = getHttpMethod(method);
     const body = getBody(httpMethod, params);
-    const queryParams = getQueryParams(httpMethod, params, this.currency, this.locale);
+    const queryParams = getQueryParams(httpMethod, params, this.currency, this.locale, this.locationId);
     const requiresToken = getRequiresToken(method);
 
     // extract options

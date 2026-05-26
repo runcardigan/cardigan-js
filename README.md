@@ -396,6 +396,7 @@ The `.env` file lists the variables required to be set -- when starting developm
 * `VITE_CUSTOMER_API_SECRET`: The Cardigan Storefront API secret defined for your Shopify store. This should be provided to you by the Cardigan support team, and is used to generate valid JWT tokens in your local development environment for use against the live Cardigan API. For example, `Qqs99Rc29K23fe7kQvfR1LRG`.
 * `VITE_CUSTOMER_ID`: The numerical ID for the Shopify customer you would like to use for development purposes. For example, `7225251091539`.
 * `VITE_LOCALE`: By default, Cardigan will use the default locale of the store to generate formatted responses and messages. The locale can be overridden via the `locale` context option, which is set in the local development environment with this variable.
+* `VITE_LOCATION_ID`: In some contexts, the currency used for profile matching needs to be inferred from the Shopify location ID (for example, requests from a POS terminal). The location ID can be set via the `locationId` context option, which is set in the local development environment with this variable.
 * `VITE_SHOPIFY_SUBDOMAIN`: The domain prefix  for the Shopify store you would like to use for development purposes. For example, this value would be `store` for a Shopify store with the domain `store.myshopify.com`.
 
 ### Starting the development server
